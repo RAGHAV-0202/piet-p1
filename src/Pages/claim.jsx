@@ -1,0 +1,257 @@
+import React from "react";
+import Navbar from "../Components/navbar";
+import SideBar from "../Components/sidebar";
+
+const Heading = ()=>{
+    return(
+        <div className="w-full h-[100px] flex pt-5 pb-5  flex-col">
+            <h3 className="font-bold text-2xl" >Details for Submission</h3>
+            <h6 className="font-semibold text-[14px] text-gray-500">Fill all the details for the submission</h6>
+        </div>
+    )
+}
+const ClaimBox = () => {
+
+    const [authors, setAuthors] = React.useState(1);
+    const [authorNames, setAuthorNames] = React.useState(Array(7).fill(''));
+
+    const [title, setTitle] = React.useState('');
+    const [publicationDate, setPublicationDate] = React.useState('');
+    const [webLink, setWebLink] = React.useState('');
+    const [venue, setVenue] = React.useState('');
+    const [paperFront, setPaperFront] = React.useState(null);
+    const [claimProof, setClaimProof] = React.useState(null);
+
+    const [errors, setErrors] = React.useState({});
+
+    const handleNumberAuthors = (e) => {
+        setAuthors(parseInt(e.target.value));
+    };
+
+    const handleAuthorChange = (index, value) => {
+        const updatedAuthors = [...authorNames];
+        updatedAuthors[index] = value;
+        setAuthorNames(updatedAuthors);
+    };
+    
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setPaperFront(file);
+            console.log(file.name);
+        }
+    };
+
+    const handleProofChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setClaimProof(file);
+            console.log(file.name);
+        }
+    };
+
+
+
+    const validateForm = () => {
+        const newErrors = {};
+        if (!title.trim()) newErrors.title = true;
+        if (!publicationDate) newErrors.publicationDate = true;
+        if (!webLink.trim()) newErrors.webLink = true;
+        if (!venue.trim()) newErrors.venue = true;
+        if (!paperFront) newErrors.paperFront = true;
+        if (!claimProof) newErrors.claimProof = true;
+
+        authorNames.slice(0, authors).forEach((name, index) => {
+            if (!name.trim()) {
+                newErrors[`author${index}`] = true;
+            }
+        });
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const handleSubmit = () => {
+        if (!validateForm()) {
+            alert("Please fill all required fields.");
+            return;
+        }
+
+        const formData = new FormData();
+
+        formData.append('title', title);
+        formData.append('numberOfAuthors', authors);
+        formData.append('publicationDate', publicationDate);
+        formData.append('webLink', webLink);
+        formData.append('venue', venue);
+        formData.append('calculatedAmount', (10000 / authors).toFixed(0));
+
+        authorNames.slice(0, authors).forEach((name, index) => {
+            formData.append(`author${index + 1}`, name);
+        });
+
+        formData.append('paperFront', paperFront);
+        formData.append('claimProof', claimProof);
+
+        for (let [key, value] of formData.entries()) {
+            if (value instanceof File) {
+                console.log(`${key}:`, value.name, value.type, value.size + " bytes");
+            } else {
+                console.log(`${key}:`, value);
+            }
+        }
+    };
+
+    const errorClass = "border-red-500";
+
+    return (
+        <div className="claimBox flex w-full h-full rounded-2xl p-5 flex-col">
+            <Heading />
+
+            <span className="mb-5">
+                <p>Title of Paper <span className="text-red-600">*</span></p>
+                <input
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className={`w-full border h-8 rounded-sm max-w-[400px] px-2 ${errors.title ? errorClass : ''}`}
+                    type="text"
+                    placeholder="Title"
+                />
+            </span>
+
+            <span className="mb-5">
+                <p>Number of Authors <span className="text-red-600">*</span></p>
+                <select
+                    onChange={handleNumberAuthors}
+                    defaultValue={1}
+                    className="w-full border h-8 rounded-sm max-w-[400px] px-2"
+                >
+                    {[...Array(7)].map((_, index) => (
+                        <option key={index} value={index + 1}>{index + 1}</option>
+                    ))}
+                </select>
+            </span>
+
+            <div className="w-full flex flex-wrap ml-5 mb-5">
+                {[...Array(authors)].map((_, index) => (
+                    <span key={index} className="mb-2 mr-10">
+                        <p>Name of Author {index + 1} <span className="text-red-600">*</span></p>
+                        <input
+                            value={authorNames[index]}
+                            onChange={(e) => handleAuthorChange(index, e.target.value)}
+                            className={`w-full border h-8 rounded-sm max-w-[400px] px-2 ${errors[`author${index}`] ? errorClass : ''}`}
+                            type="text"
+                            placeholder="Author"
+                        />
+                    </span>
+                ))}
+            </div>
+
+            <span className="mb-5">
+                <p>Date of Publication <span className="text-red-600">*</span></p>
+                <input
+                    value={publicationDate}
+                    onChange={(e) => setPublicationDate(e.target.value)}
+                    className={`w-auto border h-8 rounded-sm max-w-[400px] px-2 ${errors.publicationDate ? errorClass : ''}`}
+                    type="date"
+                />
+            </span>
+
+            <span className="mb-5">
+                <p>Web link of research document <span className="text-red-600">*</span></p>
+                <input
+                    value={webLink}
+                    onChange={(e) => setWebLink(e.target.value)}
+                    className={`w-auto border h-8 rounded-sm max-w-[400px] px-2 ${errors.webLink ? errorClass : ''}`}
+                    type="text"
+                    placeholder="Link"
+                />
+            </span>
+
+            <span className="mb-5">
+                <p>Venue for Paper <span className="text-red-600">*</span></p>
+                <input
+                    value={venue}
+                    onChange={(e) => setVenue(e.target.value)}
+                    className={`w-auto border h-8 rounded-sm max-w-[400px] px-2 ${errors.venue ? errorClass : ''}`}
+                    type="text"
+                    placeholder="Venue"
+                />
+            </span>
+
+            <span className="mb-5">
+                <p className="font-medium text-[14px]">Research Paper Front <span className="text-red-600">*</span></p>
+                <label
+                    htmlFor="paperFrontUpload"
+                    className="cursor-pointer inline-flex items-center gap-2 px-5 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition"
+                >
+                    {/* icon */}
+                    Upload PDF
+                    <input
+                        id="paperFrontUpload"
+                        type="file"
+                        accept="application/pdf"
+                        onChange={handleFileChange}
+                        className="hidden"
+                    />
+                </label>
+
+                {paperFront && (
+                    <p className="mt-2 text-green-600 font-medium">
+                        Uploaded: {paperFront.name}
+                    </p>
+                )}
+            </span>
+
+            <span className="mb-5">
+                <p className="font-medium text-[14px]">Claim Proof <span className="text-red-600">*</span></p>
+                <label
+                    htmlFor="claimProofUpload"
+                    className="cursor-pointer inline-flex items-center gap-2 px-5 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition"
+                >
+                    {/* icon */}
+                    Upload PDF
+                    <input
+                        id="claimProofUpload"
+                        type="file"
+                        accept="application/pdf"
+                        onChange={handleProofChange}
+                        className="hidden"
+                    />
+                </label>
+
+                {claimProof && (
+                    <p className="mt-2 text-green-600 font-medium">
+                        Uploaded: {claimProof.name}
+                    </p>
+                )}
+            </span>
+
+
+            <span className="mb-5">
+                <p>Calculated Amount: {(10000 / authors).toFixed(0)} Rs.</p>
+            </span>
+
+            <button onClick={handleSubmit} type="button" className="w-[200px] h-[40px] bg-green-400 font-semibold rounded-2xl">
+                Submit
+            </button>
+        </div>
+    );
+};
+
+
+const Claim = () => {
+    return (
+        <div className="claim h-full w-full flex pr-5 pb-10 max-h-[100vh]">
+            <SideBar />
+            <div className="content flex flex-col w-full">
+                <Navbar />
+                <div className="areaContent bg-[#EDEFFD] flex w-full h-full py-[20px] px-[20px] min-h-[calc(100vh-120px)] rounded-2xl mt-5 shadow-2xs flex-col">
+                    <ClaimBox />
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default Claim;
