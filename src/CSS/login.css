@@ -1,0 +1,97 @@
+.left {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    background-color: #fb923c;
+    /* bg-orange-400 */
+}
+
+.left_content {
+    height: calc(100% - 45px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.left_container {
+    height: 70%;
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+}
+
+.bold.heading {
+    height: 10%;
+    font-family: 'Dosis', sans-serif;
+    font-weight: 700;
+    font-size: 32px;
+    color: var(--text-clr);
+}
+
+.login_form {
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+}
+
+.login_form span {
+    color: var(--text-gray);
+    font-size: 0.8em;
+    line-height: 0.9em;
+    padding-top: 10px;
+    font-weight: 500;
+}
+
+.login_form input {
+    padding: 10px 5px 10px 10px;
+    background: transparent;
+    font-size: 0.9em;
+    font-weight: 500;
+    border: 1px solid var(--border-clr);
+    border-radius: 5px;
+    outline: none;
+    color: var(--text-clr);
+    margin: 5px 0;
+}
+
+.login_form input::placeholder {
+    color: rgb(104, 93, 93);
+    font-size: 0.9em;
+    font-weight: 600;
+}
+
+.sign_up_btn {
+    padding: 10px 5px;
+    font-size: 0.9em;
+    font-weight: 600;
+    border-radius: 5px;
+    border: none;
+    color: var(--text-white);
+    background-color: var(--btn-clr);
+    outline: none;
+    margin-top: 5px;
+    border: 1px solid rgb(156, 134, 134);
+}
+
+.sign_up_btn:hover {
+    color: var(--text-clr);
+    background-color: lightblue;
+    border: 1px solid var(--text-clr);
+}
+
+.center {
+    text-align: center;
+    padding-bottom: 15px;
+    border-bottom: 1px solid gainsboro;
+}
+
+.login_link {
+    color: rgb(60, 120, 231);
+    text-decoration: none;
+}
+
+.login_info {
+    font-size: 0.8em;
+    text-align: center;
+}

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import React from "react";
+import bgImg from "../assets/image.png"
 
 const Progress = (props)=>{
   return(
@@ -35,6 +36,23 @@ const Progress = (props)=>{
 
 
       </div>
+  )
+}
+
+
+const LoginNav = ()=>{
+  return(
+    <div className="navbar shadow-2xl px-10 w-screen h-[60px]">
+          <div  className="logo h-auto w-[280px] flex flex-row items-center ">
+              <div className="h-[60px]"> <img className="h-[60px]" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBlh8qU-hFL2yJUpMHEMY0sprJ7UqhJA2wTjzCJpC---5hXlfQY1yW02ul-ScBLpgW&usqp=CAU" alt="logo"></img></div>
+
+              <div className="branding w-full h-full flex flex-col capitalize font-semibold leading-5 pl-5  ">
+                  <span className="uppercase">panipat insitute of</span>
+                  <span className="uppercase">Engineering and</span>
+                  <span className="uppercase">technology</span>
+              </div>
+          </div>
+    </div>
   )
 }
 
@@ -77,12 +95,15 @@ export default function Register() {
   
 
   return(
-    <div className="register_page w-screen h-screen bg-[#EDEFFD] flex items-center justify-center">
-      <div className="centered w-full h-full max-w-[1400px] max-h-[900px] flex flex-row rounded-3xl shadow-2xl">
-        <div className="left w-[60%] h-full rounded-l-3xl p-20 flex flex-col gap-10">
+    <div className="register_page w-screen h-screen bg-[#EDEFFD] flex flex-col items-center">
+        <LoginNav/>
+      
+        <div className="content w-screen h-[calc(100vh - 60px)] flex flex-row  flex-1">
+
+          <div className="left w-[50%] h-full rounded-l-3xl p-20 flex flex-col gap-10 items-center justify-center ">
           <Progress step={step} setStep={setStep}/>
           <Info step={step} />
-          <div className="inputArea flex flex-col w-full h-auto min-h-[400px]">
+          <div className="inputArea flex flex-col w-full h-auto min-h-[400px] max-w-[600px]">
             {step == 1 && (
               <>
                 <span className="mb-5">
@@ -164,7 +185,7 @@ export default function Register() {
 
             </div>
 
-            <div className="buttonArea w-full h-[80px] flex flex-row justify-between items-center relative">
+            <div className="buttonArea max-w-[600px] w-full h-[80px] flex flex-row justify-between items-center relative">
 
               {step > 1 && 
                 <button 
@@ -191,11 +212,12 @@ export default function Register() {
                 
             </div>
         </div>
-        <div className="right w-[40%] h-full bg-red-200 rounded-r-3xl">
-            <img className="w-full h-full rounded-r-3xl" src="https://images.gofundme.com/w_nznP4WEpEFX0PNzn0zvyQ2J8k=/640x480/https://d2g8igdw686xgo.cloudfront.net/72501389_1687367121294329_r.jpeg" alt="bg"></img>
+
+        <div className="right w-[50%] h-full rounded-r-3xl flex items-center justify-center">
+            <img className="w-full" src={bgImg} alt="bg"></img>
         </div>
 
-      </div>
+        </div>
     </div>
   )
 }

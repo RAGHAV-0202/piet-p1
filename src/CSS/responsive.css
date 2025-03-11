@@ -1,0 +1,19 @@
+@media screen and (width < 1440px) {
+    .centered{
+        width: 100% !important;
+        height: 100% !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+    }
+    .register_page{
+        padding: 0;
+    }
+}
+
+.centered{
+    height: calc(100vh - 60px);
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    /* background: red; */
+}
