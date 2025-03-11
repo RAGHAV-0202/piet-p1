@@ -246,7 +246,9 @@ const ClaimBox2 = () =>{
 
     const [authors, setAuthors] = React.useState(1);
     const [authorNames, setAuthorNames] = React.useState(Array(7).fill(''));
-
+    const [authorAffiliation, setAffilation] = React.useState(Array(7).fill(''));
+    const [category , setCategory] = React.useState("SCIE / WOS / ESCI")
+    const [incentive , setIncentive] = React.useState(10000)
     const [title, setTitle] = React.useState('');
     const [publicationDate, setPublicationDate] = React.useState('');
     const [webLink, setWebLink] = React.useState('');
@@ -258,6 +260,23 @@ const ClaimBox2 = () =>{
 
     const handleNumberAuthors = (e) => {
         setAuthors(parseInt(e.target.value));
+    };
+
+    const handleCategory = (value) =>{
+        const raw = value.target.value 
+        const arr = raw.split(',')
+
+        const category = arr[0];
+        const incentive = arr[1];
+        
+        setCategory(category)
+        setIncentive(incentive) ;
+    }
+
+    const handleAuthorAffiliationChange = (index, value) => {
+        const updatedAffilation = [...authorAffiliation];
+        updatedAffilation[index] = value;
+        setAffilation(updatedAffilation);
     };
 
     const handleAuthorChange = (index, value) => {
@@ -290,14 +309,23 @@ const ClaimBox2 = () =>{
         if (!publicationDate) newErrors.publicationDate = true;
         if (!webLink.trim()) newErrors.webLink = true;
         if (!venue.trim()) newErrors.venue = true;
-        if (!paperFront) newErrors.paperFront = true;
-        if (!claimProof) newErrors.claimProof = true;
+        if (!paperFront || !(paperFront instanceof File)) newErrors.paperFront = true;
+        if (!claimProof || !(claimProof instanceof File)) newErrors.claimProof = true;
+
+        
 
         authorNames.slice(0, authors).forEach((name, index) => {
             if (!name.trim()) {
                 newErrors[`author${index}`] = true;
             }
         });
+
+        authorAffiliation.slice(0, authors).forEach((aff, index) => {
+            if (!aff.trim()) {
+                newErrors[`affiliation${index}`] = true;
+            }
+        });
+
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -316,10 +344,14 @@ const ClaimBox2 = () =>{
         formData.append('publicationDate', publicationDate);
         formData.append('webLink', webLink);
         formData.append('venue', venue);
-        formData.append('calculatedAmount', (10000 / authors).toFixed(0));
+        formData.append('category', category);
+        formData.append('calculatedAmount', (incentive / authors).toFixed(0));
 
         authorNames.slice(0, authors).forEach((name, index) => {
             formData.append(`author${index + 1}`, name);
+        });
+        authorAffiliation.slice(0, authors).forEach((affilation, index) => {
+            formData.append(`authorAffiliation${index + 1}`, affilation);
         });
 
         formData.append('paperFront', paperFront);
@@ -341,8 +373,23 @@ const ClaimBox2 = () =>{
         <div className="claimBox flex w-full h-full rounded-2xl p-5 flex-col  items-center">
             <h1 className="text-xl font-bold pb-10" >Enter Details for Claim</h1>     
 
-
             <div className="areaForDetails w-full bg-white py-10 rounded-3xl px-10 max-w-[800px] flex flex-col">
+
+            <span className="mb-5">
+                    <p>Category of submission <span className="text-red-600">*</span></p>
+                    <select
+                        onChange={handleCategory}
+                        defaultValue={"Research Paper"}
+                        className="w-full border h-12 rounded-sm max-w-[400px] px-6 flex items-center"
+                    >
+                    <option value={["SCIE / WOS / ESCI" , 10000]}>SCIE / WOS / ESCI (10000)</option>
+                    <option value={["ESCI SCOPUS" , 5000]}>ESCI SCOPUS (5000)</option>
+                    <option value={["Book Chapter international" , 5000]}>Book Chapter International (5000)</option>
+                    <option value={["Book Chapter national" , 3000]}>Book Chapter National (3000)</option>
+                    <option value={["UGC" , 3500]}>UGC (3500)</option>
+                    <option value={["PUBLICATION" , 15000]}>Publication (15000)</option>
+                    </select>
+                </span>
 
                 <span className="mb-5">
                     <span className="pb-4">Title of the research paper</span>
@@ -354,6 +401,7 @@ const ClaimBox2 = () =>{
                         placeholder="Title"
                     />
                 </span>
+
 
                 <span className="mb-5">
                     <p>Number of Authors <span className="text-red-600">*</span></p>
@@ -371,14 +419,23 @@ const ClaimBox2 = () =>{
                 <div className="w-full flex flex-wrap ml-5 mb-5">
                     {[...Array(authors)].map((_, index) => (
                         <span key={index} className="mb-2 mr-10">
-                            <p>Name of Author {index + 1} <span className="text-red-600">*</span></p>
-                            <input
-                                value={authorNames[index]}
-                                onChange={(e) => handleAuthorChange(index, e.target.value)}
-                                className={`w-full border h-8 rounded-sm border-transparent bg-zinc-100 px-6 py-6 ${errors.title ? errorClass : ''}`}
-                                type="text"
-                                placeholder="Author"
-                            />
+                            <p>Author {index + 1} <span className="text-red-600">*</span></p>
+                            <div className="flex flex-row w-full gap-10">
+                                <input
+                                    value={authorNames[index]}
+                                    onChange={(e) => handleAuthorChange(index, e.target.value)}
+                                    className={`w-full border h-8 rounded-sm border-transparent bg-zinc-100 px-6 py-6 ${errors[`author${index}`] ? errorClass : ''}`}
+                                    type="text"
+                                    placeholder="Author's Name"
+                                />
+                                <input
+                                    value={authorAffiliation[index]}
+                                    onChange={(e) => handleAuthorAffiliationChange(index, e.target.value)}
+                                    className={`w-full border h-8 rounded-sm border-transparent bg-zinc-100 px-6 py-6 ${errors[`affiliation${index}`] ? errorClass : ''}`}
+                                    type="text"
+                                    placeholder="Author's Affiliation"
+                                />
+                            </div>
                         </span>
                     ))}
                 </div>
@@ -441,7 +498,7 @@ const ClaimBox2 = () =>{
                 </span>
 
                 <span className="mb-5">
-                    <p className="font-medium text-[14px]">Claim Proof <span className="text-red-600">*</span></p>
+                    <p className="font-medium text-[14px]">Proof of Claim<span className="text-red-600">*</span></p>
                     <label
                         htmlFor="claimProofUpload"
                         className="cursor-pointer inline-flex items-center gap-2 px-5 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition"
@@ -466,7 +523,7 @@ const ClaimBox2 = () =>{
 
 
                 <span className="mb-5">
-                    <p className="font-medium">Calculated Amount: {(10000 / authors).toFixed(0)} Rs.</p>
+                    <p className="font-medium">Calculated Amount: {(incentive / authors).toFixed(0)} Rs.</p>
                 </span>
 
                 <div className="w-full flex items-center justify-center">

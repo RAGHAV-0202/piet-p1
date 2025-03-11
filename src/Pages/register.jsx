@@ -9,7 +9,7 @@ const Progress = (props)=>{
               <div className={`flex items-center justify-center w-[40px] h-[40px] rounded-lg  ${props.step == 1 ? "bg-blue-600" : "bg-zinc-400"}  `}>
                 <p className={`text-[16px] text-grey ${props.step == 1 ? "text-white" : "text-grey"}`} >1</p>
               </div>
-              <p className="text-[18px] font-medium">Account Details</p>
+              <p className="text-[18px] font-medium">Login Details</p>
           </button>
 
           <button onClick={()=>{props.setStep(2)}} className="progress_indicator w-[20%] h-full px-1  flex items-center justify-between gap-1">
@@ -21,14 +21,14 @@ const Progress = (props)=>{
 
           <button onClick={()=>{props.setStep(3)}} className="progress_indicator w-[20%] h-full px-1  flex items-center justify-between gap-1">
               <div className={`flex items-center justify-center w-[40px] h-[40px] rounded-lg  ${props.step == 3 ? "bg-blue-600" : "bg-zinc-400"}  `}>
-                <p className={`text-[16px] text-grey ${props.step == 3 ? "text-white" : "text-grey"}`}>2</p>
+                <p className={`text-[16px] text-grey ${props.step == 3 ? "text-white" : "text-grey"}`}>3</p>
               </div>
               <p className="text-[18px] font-medium">More Details</p>
           </button>
 
           <button onClick={()=>{props.setStep(4)}} className="progress_indicator w-[20%] h-full px-1 flex items-center justify-between gap-1">
               <div className = {`flex items-center justify-center w-[40px] h-[40px] rounded-lg  ${props.step == 4 ? "bg-blue-600" : "bg-zinc-400"}  `}>
-                <p className={`text-[16px] text-grey ${props.step == 4 ? "text-white" : "text-grey"}`}>3</p>
+                <p className={`text-[16px] text-grey ${props.step == 4 ? "text-white" : "text-grey"}`}>4</p>
               </div>
               <p className="text-[18px] font-medium">Bank Details</p>
           </button>
@@ -66,6 +66,8 @@ export default function Register() {
     bankAccountNumber: "",
     ifscCode: "",
     branch: "",
+    doj : "" ,
+    orcid : "" 
   });
 
   const handleChange = (e) => {
@@ -104,6 +106,10 @@ export default function Register() {
             {step == 2 && (
               <>
                 <span className="mb-5">
+                  <span className="pb-5">Joining Date</span>
+                  <input name="doj" value={formData.doj} onChange={handleChange} className="w-full mt-1 h-8 rounded-lg border-[1px] border-blue-400 px-3 py-6" type="date" placeholder="CSE" />
+                </span>
+                <span className="mb-5">
                   <span className="pb-5">Department</span>
                   <input name="department" value={formData.department} onChange={handleChange} className="w-full mt-1 h-8 rounded-lg border-[1px] border-blue-400 px-3 py-6" type="text" placeholder="CSE" />
                 </span>
@@ -130,6 +136,10 @@ export default function Register() {
                 <span className="mb-5">
                   <span className="pb-5">Google Scholar ID</span>
                   <input name="googleScholarId" value={formData.googleScholarId} onChange={handleChange} className="w-full mt-1 h-8 rounded-lg border-[1px] border-blue-400 px-3 py-6" type="text" placeholder="Google Scholar ID" />
+                </span>
+                <span className="mb-5">
+                  <span className="pb-5">ORCID ID</span>
+                  <input name="orcid" value={formData.orcid} onChange={handleChange} className="w-full mt-1 h-8 rounded-lg border-[1px] border-blue-400 px-3 py-6" type="text" placeholder="ORCID ID" />
                 </span>
               </>
             )}

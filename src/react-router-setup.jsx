@@ -5,6 +5,8 @@ import Error from "./Pages/error.jsx";
 import Claim from "./Pages/claim.jsx";
 import Register from "./Pages/register.jsx";
 import Login from "./Pages/login.jsx";
+import Submissions from "./Pages/mySubmissions.jsx";
+import Profile from "./Pages/profile.jsx";
 
 const ReactRouterSetup = () => {
   return (
@@ -15,7 +17,8 @@ const ReactRouterSetup = () => {
         <Route path="/register" element={<Register/>} />
         <Route path="/" element={<Login/>} />
         <Route path="/login" element={<Login/>} />
-
+        <Route path="/submissions" element={<Submissions/>}/>
+        <Route path="/profile" element={<Profile/>}/>
         <Route path="*" element={<Error />} />
       </Routes>
     </Router>
