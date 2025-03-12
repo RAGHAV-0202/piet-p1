@@ -1,98 +1,198 @@
 import { useState } from "react";
 import React from "react";
-import "../CSS/responsive.css"
-import bgImg from "../assets/image.png"
+import "../CSS/responsive.css";
+import bgImg from "../assets/image.png";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import baseUrl from "../baseurl";
 
-const Progress = ()=>{
-  return(
-      <div className="progress  w-full h-[80px] flex flex-row justify-between items-center border-b-[1px] border-gray-300 pb-3">
-
-          <button  className="progress_indicator w-max  h-full px-1  flex items-center justify-between gap-3">
-              <div className={`flex items-center justify-center w-[40px] h-[40px] rounded-lg  bg-blue-600 `}>
-                <p className={`text-[16px] text-grey "text-white"`} ></p>
-              </div>
-              <p className="text-[18px] font-medium">Enter Credentials</p>
-          </button>
-
+const LoginNav = () => {
+  return (
+    <div className="navbar shadow-md px-10 w-full h-[60px] flex items-center bg-white">
+      <div className="logo flex items-center">
+        <img className="h-[60px]" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBlh8qU-hFL2yJUpMHEMY0sprJ7UqhJA2wTjzCJpC---5hXlfQY1yW02ul-ScBLpgW&usqp=CAU" alt="logo" />
+        <div className="branding pl-5 text-lg font-semibold leading-5">
+          <span className="uppercase block">Panipat Institute of</span>
+          <span className="uppercase block">Engineering and</span>
+          <span className="uppercase block">Technology</span>
+        </div>
       </div>
-  )
-}
-
-const Info = ()=>{
-  return(
-    <div className="info  w-full h-[80px] flex flex-col">
-      {/* <p className="text-[15px] text-gray-500">Step/p> */}
-      <p className="text-[25px] font-bold mt-2">Login</p>
     </div>
-  )
-}
-
-const LoginNav = ()=>{
-  return(
-    <div className="navbar shadow-2xl px-10 w-screen h-[60px]">
-          <div  className="logo h-auto w-[280px] flex flex-row items-center ">
-              <div className="h-[60px]"> <img className="h-[60px]" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBlh8qU-hFL2yJUpMHEMY0sprJ7UqhJA2wTjzCJpC---5hXlfQY1yW02ul-ScBLpgW&usqp=CAU" alt="logo"></img></div>
-
-              <div className="branding w-full h-full flex flex-col capitalize font-semibold leading-5 pl-5  ">
-                  <span className="uppercase">panipat insitute of</span>
-                  <span className="uppercase">Engineering and</span>
-                  <span className="uppercase">technology</span>
-              </div>
-          </div>
-    </div>
-  )
-}
-
+  );
+};
 
 export default function Login() {
-
-  const [formData, setFormData] = React.useState({
-   email: "",
-    password: "",
-
-  });
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({ email: false, password: false });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [apiError, setApiError] = useState("");
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    
+    // Clear field error when typing
+    if (errors[name]) {
+      validateField(name, value);
+    }
   };
 
-  
+  const handleBlur = (field) => {
+    setTouched({ ...touched, [field]: true });
+    validateField(field, formData[field]);
+  };
 
-  return(
-    <div className="register_page w-screen h-screen bg-[#EDEFFD] flex flex-col items-center">
-        <LoginNav/>
+  const validateField = (name, value) => {
+    let newErrors = { ...errors };
+    
+    if (!value.trim()) {
+      newErrors[name] = "This field is required";
+    } else if (name === "email" && !/\S+@\S+\.\S+/.test(value)) {
+      newErrors[name] = "Please enter a valid email address";
+    } else {
+      delete newErrors[name];
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const validateForm = () => {
+    let isValid = true;
+    let newErrors = {};
+    let newTouched = { email: true, password: true };
+    
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Please enter a valid email address";
+      isValid = false;
+    }
+    
+    if (!formData.password.trim()) {
+      newErrors.password = "Password is required";
+      isValid = false;
+    }
+    
+    setTouched(newTouched);
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handleSubmit = async () => {
+    // Clear any previous API errors
+    setApiError("");
+    
+    if (!validateForm()) {
+      return;
+    }
+    
+    setIsSubmitting(true);
+    
+    try {
+      const response = await axios.post(baseUrl + "api/auth/login", formData, { 
+        withCredentials: true 
+      });
       
-        <div className="content w-screen h-[calc(100vh - 60px)] flex flex-row  flex-1">
+      if (response.data.success) {
+        // Successfully logged in
+        navigate("/dashboard");
+      } else {
+        // Server returned a success:false response
+        setApiError(response.data.message || "Login failed");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      
+      // Handle error response from server
+      if (error.response && error.response.data) {
+        setApiError(error.response.data.message || "Login failed. Please try again.");
+      } else {
+        setApiError("Network error. Please check your connection and try again.");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
-        <div className="left w-[50%] h-full rounded-l-3xl p-20 flex flex-col gap-10 items-center justify-center ">
+  const getInputClass = (fieldName) => {
+    const baseClass = "w-full mt-1 p-2 rounded-lg border";
+    if (touched[fieldName] && errors[fieldName]) {
+      return `${baseClass} border-red-500`;
+    }
+    return `${baseClass} border-blue-400`;
+  };
 
-          <div className="inputArea flex flex-col w-full h-auto min-h-[400px] max-w-[600px]">
-              <>
-                <span className="mb-5">
-                  <span className="pb-5">Email Address</span>
-                  <input name="email" value={formData.email} onChange={handleChange} className="w-full mt-1 h-8 rounded-lg border-[1px] border-blue-400 px-3 py-6" type="text" placeholder="jon@domain.com" />
-                </span>
-                <span className="mb-5">
-                  <span className="pb-5">Enter Password</span>
-                  <input name="password" value={formData.password} onChange={handleChange} className="w-full mt-1 h-8 rounded-lg border-[1px] border-blue-400 px-3 py-6" type="password" placeholder="Set Password" />
-                </span>
-              </>
+  return (
+    <div className="register_page w-full min-h-screen bg-[#EDEFFD] flex flex-col items-center overflow-hidden">
+      <LoginNav />
+      <div className="content w-full min-h-[calc(100vh-60px)] flex flex-row items-center justify-center flex-1">
+        <div className="left w-[50%] min-h-[calc(100vh-70px)] flex flex-col gap-5 items-center justify-center">
+          <div className="form w-full max-w-[500px]">
+            <h1 className="font-bold text-xl pb-6">Login</h1>
+            
+            {/* Show API error message if exists */}
+            {apiError && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                <p>{apiError}</p>
+              </div>
+            )}
+            
+            <div className="inputArea flex flex-col w-full gap-4">
+              <div>
+                <label className="text-sm font-medium">Email Address</label>
+                <input 
+                  name="email" 
+                  value={formData.email} 
+                  onChange={handleChange}
+                  onBlur={() => handleBlur("email")}
+                  className={getInputClass("email")} 
+                  type="email" 
+                  placeholder="jon@domain.com" 
+                />
+                {touched.email && errors.email && (
+                  <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+                )}
+              </div>
+              <div>
+                <label className="text-sm font-medium">Enter Password</label>
+                <input 
+                  name="password" 
+                  value={formData.password} 
+                  onChange={handleChange}
+                  onBlur={() => handleBlur("password")}
+                  className={getInputClass("password")} 
+                  type="password" 
+                  placeholder="Enter Password" 
+                />
+                {touched.password && errors.password && (
+                  <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+                )}
+              </div>
             </div>
-
-            <div className="buttonArea max-w-[600px] w-full h-[80px] flex flex-row justify-between items-center relative">
-                <button 
-                    onClick={() => console.log(formData)}
-                    className="cursor-pointer inline-flex items-center gap-2 px-5 py-2 bg-green-600 text-white font-medium rounded-md hover:bg-green-700 transition absolute right-0">
-                    Submit
-                </button>
+            <div className="buttonArea w-full flex justify-end mt-5">
+              <button 
+                onClick={handleSubmit} 
+                disabled={isSubmitting}
+                className={`px-5 py-2 ${isSubmitting ? 'bg-gray-500' : 'bg-green-600 hover:bg-green-700'} text-white font-medium rounded-md transition`}
+              >
+                {isSubmitting ? 'Logging in...' : 'Login'}
+              </button>
             </div>
+            <div className="mt-4 text-center">
+              <p className="text-sm text-gray-600">
+                Don't have an account? <a href="/register" className="text-blue-600 hover:underline">Sign up</a>
+              </p>
+            </div>
+          </div>
         </div>
-
-        <div className="right w-[50%] h-full rounded-r-3xl flex items-center justify-center">
-            <img className="w-full" src={bgImg} alt="bg"></img>
+        <div className="right w-[50%] h-full flex items-center justify-center">
+          <img className="w-full max-w-[600px]" src={bgImg} alt="background" />
         </div>
-
-        </div>
+      </div>
     </div>
-  )
+  );
 }
