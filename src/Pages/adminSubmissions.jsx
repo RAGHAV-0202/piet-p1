@@ -1,42 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-// import Navbar from "../Components/navbar.jsx";
-// import SideBar from "../Components/sidebar.jsx";
+
 import baseUrl from "../baseurl.js";
 // import { useNavigate } from "react-router-dom";
 
 import { useNavigate } from "react-router-dom";
 
-// const UserWelcome = ()=>{
-
-//     const [data , setData] = React.useState({fullName : "Name Surname"})
-
-//     React.useState(()=>{
-//         async function getUser(){
-//             try{
-//                 const response = await axios.get(`${baseUrl}api/profile/profile` , {withCredentials : true} , {withCredentials : true})
-//                 // console.log(response)
-//                 setData(response.data?.data)
-//             }catch(err){
-//                 console.log("error while getting profile")
-//                 console.log(err)
-//             }
-//         }
-
-//         getUser()
-//     } , [])
-
-//     console.log("data")
-//     console.log(data)
-
-
-//     return(
-//         <div className="w-full h-[100px] flex pt-5 pb-5  flex-col">
-//             <h3 className="font-bold text-2xl" >Hello, {data.fullName}</h3>
-//             <h6 className="font-semibold text-[14px] text-gray-500">Nice to have you back, what an exciting day .</h6>
-//         </div>
-//     )
-// }
 
 const SideBar = ()=>{
     const navigate = useNavigate()
@@ -173,28 +142,48 @@ const Navbar = () => {
 };
 
 
-const Claim = ({ title, authors, publicationDate, venue, webLink, category, calculatedAmount }) => {
+const Claim = ({ 
+  title, 
+  authors, 
+  numberOfAuthors, 
+  publicationDate, 
+  venue, 
+  webLink, 
+  calculatedAmount, 
+  paperFront, 
+  claimProof, 
+  user,
+  createdAt,
+  updatedAt
+}) => {
   return (
     <div className="w-full bg-white p-5 rounded-xl shadow-md flex flex-col gap-2 border-l-4 border-blue-500">
       <h3 className="text-xl font-bold text-gray-800">{title || "Untitled Paper"}</h3>
-      <p className="text-sm text-gray-600">📅 Published on: {publicationDate || "N/A"}</p>
+      <p className="text-sm text-gray-600">👤 Submitted by: {user?.name || "Unknown User"}</p>
+      <p className="text-sm text-gray-600">👨‍🎓 Authors ({numberOfAuthors}): {authors.join(", ")}</p>
+      <p className="text-sm text-gray-600">📅 Published on: {new Date(publicationDate).toDateString()}</p>
       <p className="text-sm text-gray-600">🏛 Venue: {venue || "N/A"}</p>
-      <p className="text-sm text-gray-600">👨‍🎓 Authors: {authors}</p>
-      <p className="text-sm text-gray-600">📂 Category: {category}</p>
       <p className="text-sm text-gray-600">💰 Incentive: ₹{calculatedAmount}</p>
+      <p className="text-sm text-gray-600">📅 Created At: {new Date(createdAt).toLocaleString()}</p>
+      <p className="text-sm text-gray-600">🕒 Last Updated: {new Date(updatedAt).toLocaleString()}</p>
+
       {webLink && (
-        <a
-          href={webLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-600 underline text-sm"
-        >
+        <a href={webLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline text-sm">
           🔗 View Paper
         </a>
       )}
+
+      <div className="flex flex-col mt-2">
+        <p className="text-sm font-semibold">📄 Paper Front:</p>
+        <img src={paperFront} alt="Paper Front" className="w-40 h-40 object-cover border rounded-md" />
+
+        <p className="text-sm font-semibold mt-2">📑 Claim Proof:</p>
+        <img src={claimProof} alt="Claim Proof" className="w-40 h-40 object-cover border rounded-md" />
+      </div>
     </div>
   );
 };
+
 
 
 
@@ -202,6 +191,8 @@ const AdminSubmissions = () => {
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  console.log(submissions[0])
 
   useEffect(() => {
     const fetchSubmissions = async () => {
@@ -232,18 +223,19 @@ const AdminSubmissions = () => {
         <Navbar />
         <div className="areaContent bg-[#EDEFFD] flex w-full py-10 px-10 min-h-[calc(100vh-120px)] h-auto rounded-2xl mt-5 shadow-lg flex-col">
           <h2 className="font-bold text-2xl mb-4">Admin Panel - All Submissions</h2>
+
           {loading ? (
-            <p className="text-center text-gray-500">Loading submissions...</p>
+            <p>Loading submissions...</p>
           ) : error ? (
-            <p className="text-red-500 text-center">{error}</p>
-          ) : submissions.length > 0 ? (
-            <div className="w-full flex flex-col gap-5">
-              {submissions.map((submission, index) => (
-                <Claim key={index} {...submission} />
+            <p className="text-red-600">{error}</p>
+          ) : submissions.length === 0 ? (
+            <p>No submissions found.</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {submissions.map((submission) => (
+                <Claim key={submission._id} {...submission} />
               ))}
             </div>
-          ) : (
-            <p className="text-gray-500 text-center">No submissions found.</p>
           )}
         </div>
       </div>
