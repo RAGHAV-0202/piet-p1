@@ -1,23 +1,33 @@
 import React from "react";
 import Navbar from "../Components/navbar.jsx";
 import SideBar from "../Components/sidebar.jsx";
+import axios from "axios";
+import baseUrl from "../baseurl.js";
+
+
 
 const Profile = () => {
-  const user = {
-    profileImage: "https://via.placeholder.com/150", // Replace with actual image URL
-    name: "Dr. Anju Bhandari",
-    email: "anju.bhandari@example.com",
-    department: "Computer Science",
-    designation: "Professor",
-    employeeId: "EMP123456",
-    scopusId: "SCOPUS123456",
-    vidhwanId: "VIDHWAN123456",
-    googleScholarId: "https://scholar.google.com/citations?user=XXXXXXX",
-    orcId: "https://orcid.org/0000-0000-0000-0000",
-    accountNumber: "123456789012",
-    ifscCode: "HDFC0001234",
-    branch: "HDFC Bank, New Delhi",
-  };
+
+    const [user , setUser] = React.useState({fullName : "Name Surname"})
+
+    React.useState(()=>{
+        async function getUser(){
+            try{
+                const response = await axios.get(`${baseUrl}api/profile/profile` , {withCredentials : true} , {withCredentials : true})
+                // console.log(response)
+                setUser(response.data?.data)
+            }catch(err){
+                console.log("error while getting profile")
+                console.log(err)
+            }
+        }
+
+        getUser()
+    } , [])
+
+    // console.log("data")
+    console.log(user)
+
 
   return (
     <div className="h-auto min-h-[100vh] w-full flex flex-row pr-5">
@@ -33,8 +43,8 @@ const Profile = () => {
                     <img className="w-full h-full" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="user"></img>/
                 </div>                
                 <div className="details pt-[80px]">
-                    <h1 className="py-5 text-4xl font-bold leading-0">Dr. Anju Bhandari </h1>
-                    <h4 className="py-5 text-xl font-semibold leading-0 text-zinc-600" >Assistant Professor</h4>
+                    <h1 className="py-5 text-4xl font-bold leading-0">{user.fullName} </h1>
+                    <h4 className="py-5 text-xl font-semibold leading-0 text-zinc-600" >{user.designation}</h4>
                 </div>
                   <div className="moreDetails pt-10">
                       <p className="text-lg flex flex-col pb-6"><span className="font-bold font-[22px] text-zinc-500">Email:</span> {user.email}</p>
@@ -43,8 +53,8 @@ const Profile = () => {
                       <p className="text-lg flex flex-col pb-6"><span className="font-bold font-[22px] text-zinc-500">Vidhwan ID:</span> {user.vidhwanId}</p>
                       <p className="text-lg flex flex-col pb-6"><span className="font-bold font-[22px] text-zinc-500">Google Scholar:</span> <a href={user.googleScholarId} className="text-blue-600" target="_blank" rel="noopener noreferrer">Profile</a></p>
                       <p className="text-lg flex flex-col pb-6"><span className="font-bold font-[22px] text-zinc-500">ORCID:</span> <a href={user.orcId} className="text-blue-600" target="_blank" rel="noopener noreferrer">Profile</a></p>
-                      <p className="text-lg flex flex-col pb-6"><span className="font-bold font-[22px] text-zinc-500">Bank Account:</span> {user.accountNumber}</p>
-                      <p className="text-lg flex flex-col pb-6"><span className="font-bold font-[22px] text-zinc-500">IFSC Code:</span> {user.ifscCode}</p>
+                      <p className="text-lg flex flex-col pb-6"><span className="font-bold font-[22px] text-zinc-500">Bank Account:</span> {user.bankAccount}</p>
+                      <p className="text-lg flex flex-col pb-6"><span className="font-bold font-[22px] text-zinc-500">IFSC Code:</span> {user.ifsc}</p>
                       <p className="text-lg flex flex-col pb-6"><span className="font-bold font-[22px] text-zinc-500">Branch:</span> {user.branch}</p>
                   </div>
             </div>

@@ -12,14 +12,14 @@ const LoginNav = () => {
     React.useEffect(()=>{
         const getUser = async()=>{
             try{
-                await axios.get(`${baseUrl}api/auth/loggedIn` , { withCredentials: true } , { withCredentials: true })
+                await axios.get(`${baseUrl}api/admin/login` , { withCredentials: true } , { withCredentials: true })
                 // console.log(response)
                 navigate("/dashboard")
             }catch(err){
                 console.log("error while checking if logged in")
                 console.log(err)
 
-                navigate("/login")
+                navigate("/admin/login")
             }
         }
 
@@ -42,7 +42,7 @@ const LoginNav = () => {
   );
 };
 
-export default function Login() {
+export default function AdminLogin() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
@@ -114,13 +114,13 @@ export default function Login() {
     setIsSubmitting(true);
     
     try {
-      const response = await axios.post(baseUrl + "api/auth/login", formData, { 
+      const response = await axios.post(baseUrl + "api/admin/login", formData, { 
         withCredentials: true 
       });
       
       if (response.data.success) {
         // Successfully logged in
-        navigate("/dashboard");
+        navigate("/admin/dashboard");
       } else {
         // Server returned a success:false response
         setApiError(response.data.message || "Login failed");

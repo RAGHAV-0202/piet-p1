@@ -1,6 +1,8 @@
 import React from "react";
 import Navbar from "../Components/navbar";
 import SideBar from "../Components/sidebar";
+import axios from "axios";
+import baseUrl from "../baseurl";
 
 const Heading = ()=>{
     return(
@@ -331,7 +333,7 @@ const ClaimBox2 = () =>{
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (!validateForm()) {
             alert("Please fill all required fields.");
             return;
@@ -339,32 +341,43 @@ const ClaimBox2 = () =>{
 
         const formData = new FormData();
 
-        formData.append('title', title);
-        formData.append('numberOfAuthors', authors);
-        formData.append('publicationDate', publicationDate);
-        formData.append('webLink', webLink);
-        formData.append('venue', venue);
-        formData.append('category', category);
-        formData.append('calculatedAmount', (incentive / authors).toFixed(0));
+        formData.append("title", title);
+        formData.append("numberOfAuthors", authors);
+        formData.append("publicationDate", publicationDate);
+        formData.append("webLink", webLink);
+        formData.append("venue", venue);
+        formData.append("category", category);
+        formData.append("calculatedAmount", (incentive / authors).toFixed(0));
 
+        // Append author names & affiliations correctly
         authorNames.slice(0, authors).forEach((name, index) => {
-            formData.append(`author${index + 1}`, name);
-        });
-        authorAffiliation.slice(0, authors).forEach((affilation, index) => {
-            formData.append(`authorAffiliation${index + 1}`, affilation);
+            formData.append(`authors[${index}]`, name);
         });
 
-        formData.append('paperFront', paperFront);
-        formData.append('claimProof', claimProof);
+        authorAffiliation.slice(0, authors).forEach((affiliation, index) => {
+            formData.append(`authorAffiliation[${index}]`, affiliation);
+        });
 
-        for (let [key, value] of formData.entries()) {
-            if (value instanceof File) {
-                console.log(`${key}:`, value.name, value.type, value.size + " bytes");
-            } else {
-                console.log(`${key}:`, value);
-            }
+        formData.append("paperFront", paperFront);
+        formData.append("claimProof", claimProof);
+
+        try {
+            const response = await axios.post(`${baseUrl}api/form/claim`, 
+                formData, 
+                {
+                    headers: { "Content-Type": "multipart/form-data" },
+                    withCredentials: true, // Send authentication cookies
+                }
+            );
+
+            console.log("Claim submitted successfully:", response.data);
+            alert("Claim submitted successfully!");
+        } catch (error) {
+            console.error("Error submitting claim:", error.response?.data || error.message);
+            alert(error.response?.data?.message || "Failed to submit claim");
         }
     };
+
 
     const errorClass = "border-red-500";
    

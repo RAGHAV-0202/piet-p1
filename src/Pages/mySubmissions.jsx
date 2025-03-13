@@ -1,11 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Navbar from "../Components/navbar.jsx";
 import SideBar from "../Components/sidebar.jsx";
+import baseUrl from "../baseurl.js";
 
 const UserWelcome = () => {
+  const [name , setName] = React.useState("")
+
+    React.useState(()=>{
+      async function getUser(){
+          try{
+              const response = await axios.get(`${baseUrl}api/profile/profile` , {withCredentials : true} , {withCredentials : true})
+              // console.log(response)
+              setName(response.data?.data.fullName)
+          }catch(err){
+              console.log("error while getting profile")
+              console.log(err)
+          }
+      }
+
+      getUser()
+  } , [])
+
   return (
     <div className="w-full h-[100px] flex pt-5 pb-5 flex-col">
-      <h3 className="font-bold text-2xl">Hello, Dr. Anju Bhandari</h3>
+      <h3 className="font-bold text-2xl">Hello, {name}</h3>
       <h6 className="font-semibold text-[14px] text-gray-500">
         Here are your all submissions.
       </h6>
@@ -13,7 +32,7 @@ const UserWelcome = () => {
   );
 };
 
-const Claim = ({ title, authors, publicationDate, venue, webLink, category, incentive }) => {
+const Claim = ({ title, authors, publicationDate, venue, webLink, category, calculatedAmount }) => {
   return (
     <div className="w-full bg-white p-5 rounded-xl shadow-md flex flex-col gap-2 border-l-4 border-blue-500">
       <h3 className="text-xl font-bold text-gray-800">{title || "Untitled Paper"}</h3>
@@ -21,7 +40,7 @@ const Claim = ({ title, authors, publicationDate, venue, webLink, category, ince
       <p className="text-sm text-gray-600">🏛 Venue: {venue || "N/A"}</p>
       <p className="text-sm text-gray-600">👨‍🎓 Authors: {authors}</p>
       <p className="text-sm text-gray-600">📂 Category: {category}</p>
-      <p className="text-sm text-gray-600">💰 Incentive: ₹{incentive}</p>
+      <p className="text-sm text-gray-600">💰 Incentive: ₹{calculatedAmount}</p>
       {webLink && (
         <a
           href={webLink}
@@ -37,26 +56,28 @@ const Claim = ({ title, authors, publicationDate, venue, webLink, category, ince
 };
 
 const Submissions = () => {
-  const [submissions, setSubmissions] = useState([
-    {
-      title: "Deep Learning in Medical Imaging",
-      authors: 3,
-      publicationDate: "2023-09-15",
-      venue: "IEEE Transactions on Medical Imaging",
-      webLink: "https://example.com",
-      category: "SCIE / WOS / ESCI",
-      incentive: 10000,
-    },
-    {
-      title: "AI for Climate Change",
-      authors: 2,
-      publicationDate: "2024-02-10",
-      venue: "Springer Nature",
-      webLink: "https://example.com",
-      category: "SCIE / WOS / ESCI",
-      incentive: 12000,
-    },
-  ]);
+  const [submissions, setSubmissions] = useState([]); // Ensure it's an array
+
+  useEffect(() => {
+    const fetchSubmissions = async () => {
+      try {
+        const response = await axios.get(`${baseUrl}api/form/myClaims` , { withCredentials: true } , { withCredentials: true });
+        // console.log(response)
+        console.log("API Response:", response.data.data); // Debugging
+
+        if (Array.isArray(response.data.data)) {
+          setSubmissions(response.data.data);
+        } else {
+          setSubmissions([]); // Prevent non-array errors
+        }
+      } catch (err) {
+        console.error("Error fetching submissions:", err);
+        setSubmissions([]);
+      }
+    };
+
+    fetchSubmissions();
+  }, []);
 
   return (
     <div className="h-auto min-h-[100vh] w-full flex flex-row pr-5">

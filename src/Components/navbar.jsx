@@ -1,6 +1,30 @@
 import React from "react";
+import axios from "axios"
+import baseUrl from "../baseurl.js";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+    const navigate = useNavigate()
+
+    React.useEffect(()=>{
+        const getUser = async()=>{
+            try{
+                const response = await axios.get(`${baseUrl}api/auth/loggedIn` , { withCredentials: true } , { withCredentials: true })
+
+                // console.log(response)
+            }catch(err){
+                console.log("error while checking if logged in")
+                console.log(err)
+
+                navigate("/login")
+            }
+        }
+
+        getUser()
+
+        
+    } , [])
+
     return (
         <div className="navbar py-3 px-6 flex-1 w-[80vw] h-[80px] flex items-center justify-end backdrop-blur-md bg-white/10  rounded-lg">
             {/* User Profile */}

@@ -45,6 +45,27 @@ const Progress = (props)=>{
 
 
 const LoginNav = ()=>{
+    const navigate = useNavigate()
+
+    React.useEffect(()=>{
+        const getUser = async()=>{
+            try{
+                await axios.get(`${baseUrl}api/auth/loggedIn` , { withCredentials: true } , { withCredentials: true })
+
+                // console.log(response)
+                navigate("/dashboard")
+            }catch(err){
+                console.log("error while checking if logged in")
+                console.log(err)
+
+                navigate("/login")
+            }
+        }
+
+        getUser()
+
+        
+    } , [])
   return(
     <div className="navbar shadow-2xl px-10 w-full h-[60px] flex items-center bg-white">
 
