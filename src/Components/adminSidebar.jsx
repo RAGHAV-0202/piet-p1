@@ -1,26 +1,24 @@
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../CSS/responsive.css";
-import { useState , useEffect} from "react";
-import baseUrl from "../baseurl";
+import { useState, useEffect } from "react";
+import baseUrl from "../baseurl.js";
 
-const SideBar = () => {
+const AdminSideBar = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-
-    async function handleLogout(){
-        try{
-            await axios.post(`${baseUrl}api/auth/logout` , { withCredentials: true } , { withCredentials: true })
-            navigate("/login")
-        }catch(err){
-            console.log("error while logging out")
-            console.log(err)
-        }
+  async function handleLogout(){
+    try{
+      await axios.post(`${baseUrl}api/admin/logout`, { withCredentials: true }, { withCredentials: true });
+      navigate("/admin/login");
+    } catch(err){
+      console.log("error while logging out");
+      console.log(err);
     }
+  }
 
-
- const toggleMenu = () => {
+  const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
@@ -39,24 +37,14 @@ const SideBar = () => {
   // Menu items data for easier management
   const menuItems = [
     { 
-      path: "/dashboard", 
+      path: "/admin/dashboard", 
       icon: "fa-house", 
       text: "Dashboard" 
     },
     { 
-      path: "/claim", 
-      icon: "fa-file", 
-      text: "Claim" 
-    },
-    { 
-      path: "/submissions", 
+      path: "/admin/submissions", 
       icon: "fa-folder", 
-      text: "My Submissions" 
-    },
-    { 
-      path: "/profile", 
-      icon: "fa-user", 
-      text: "Profile" 
+      text: "All Submissions" 
     }
   ];
 
@@ -72,7 +60,7 @@ const SideBar = () => {
 
       {/* Desktop Sidebar */}
       <div className="sidebar hidden md:flex w-[20%] h-[100vh] bg-white flex-col items-center py-[20px] px-[2%] sticky top-0">
-        <a href="/dashboard" className="sidebar_logo h-auto w-[280px] flex flex-row items-center">
+        <a href="/admin/dashboard" className="sidebar_logo h-auto w-[280px] flex flex-row items-center">
           <button className="h-[60px]">
             <img
               className="h-[60px]"
@@ -193,4 +181,4 @@ const SideBar = () => {
   );
 };
 
-export default SideBar;
+export default AdminSideBar;

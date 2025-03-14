@@ -3,6 +3,8 @@ import Navbar from "../Components/navbar.jsx";
 import axios from "axios";
 import SideBar from "../Components/sidebar.jsx";
 import baseUrl from "../baseurl.js";
+import "../CSS/responsive.css"
+import "../CSS/dashboard.css"
 
 const UserWelcome = ()=>{
 
@@ -23,12 +25,12 @@ const UserWelcome = ()=>{
         getUser()
     } , [])
 
-    console.log("data")
-    console.log(data)
+    // console.log("data")
+    // console.log(data)
 
 
     return(
-        <div className="w-full h-[100px] flex pt-5 pb-5  flex-col">
+        <div className="userWlcm w-full h-[100px] flex pt-5 pb-5  flex-col">
             <h3 className="font-bold text-2xl" >Hello, {data.fullName}</h3>
             <h6 className="font-semibold text-[14px] text-gray-500">Nice to have you back, what an exciting day .</h6>
         </div>
@@ -61,16 +63,17 @@ const Options = () => {
     );
 };
 
-const Dashboard = ()=>{
+const Dashboard = () => {
     return(
-        <div className="h-auto min-h-[100vh] w-full flex flex-row pr-5">
+        <div className="dashboard_main_div h-auto min-h-screen w-screen flex flex-row">
             <SideBar/>
-            <div className="content w-full h-full flex flex-col ">
-                    <Navbar/>
-                    <div className="areaContent bg-[#EDEFFD] flex w-full h-full py-[20px] px-[20px] min-h-[calc(100vh-150px)] h-auto rounded-2xl mt-5 shadow-2xs flex-col p-10">
-                        <UserWelcome/>
-                        <Options/>
-                    </div> 
+            <div className="dashboard_content w-[80%] flex flex-col flex-1">
+                <Navbar/>
+                <div className="dashboard_areaContent bg-[#EDEFFD] flex w-full min-h-[calc(100vh-80px)] h-auto rounded-2xl mt-5 shadow-2xs flex-col p-5 md:p-10">
+                    {/* No gap between these elements */}
+                    <UserWelcome/>
+                    <Options/>
+                </div> 
             </div>
         </div>
     )

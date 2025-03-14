@@ -19,7 +19,7 @@ const LoginNav = () => {
                 console.log("error while checking if logged in")
                 console.log(err)
 
-                navigate("/login")
+                // navigate("/login")
             }
         }
 
