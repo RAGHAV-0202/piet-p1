@@ -20,7 +20,7 @@ const AdminNavbar = () => {
                 // If the admin API returns user data in the same format, uncomment this
                 // Check the structure of response.data and adjust accordingly
                 // setData(response.data.data.user);
-                console.log(response);
+                // console.log(response);
             } catch(err) {
                 console.log("error while checking if logged in");
                 console.log(err);

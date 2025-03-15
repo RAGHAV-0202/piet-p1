@@ -10,6 +10,7 @@ import Profile from "./Pages/profile.jsx";
 import AdminSubmissions from "./Pages/adminSubmissions.jsx";
 import AdminDashboard from "./Pages/adminDashboard.jsx";
 import AdminLogin from "./Pages/adminLogin.jsx";
+import AdminManageUsers from "./Pages/adminManageUsers.jsx";
 
 const ReactRouterSetup = () => {
   return (
@@ -27,6 +28,7 @@ const ReactRouterSetup = () => {
         <Route path="admin/dashboard" element={<AdminDashboard />} />
         <Route path="admin/login" element={<AdminLogin />} />
         <Route path="admin/submissions" element={<AdminSubmissions />} />
+        <Route path="admin/users" element={<AdminManageUsers />} />
       </Routes>
     </Router>
   );

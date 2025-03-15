@@ -45,7 +45,12 @@ const AdminSideBar = () => {
       path: "/admin/submissions", 
       icon: "fa-folder", 
       text: "All Submissions" 
-    }
+    },
+    { 
+    path: "/admin/users", 
+    icon: "fa-user", 
+    text: "All Users" 
+  }
   ];
 
   return (

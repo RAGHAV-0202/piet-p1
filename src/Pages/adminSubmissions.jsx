@@ -25,11 +25,24 @@ const Claim = ({
   createdAt,
   updatedAt
 }) => {
+  // Function to extract filename from Cloudinary URL
+  const getFilenameFromUrl = (url) => {
+    if (!url) return '';
+    const urlParts = url.split('/');
+    return urlParts[urlParts.length - 1].split('.')[0];
+  };
+
+  // Create a download URL that forces the browser to download rather than display
+  const createDownloadUrl = (url) => {
+    // For raw files, we'll use the same URL but add a download attribute in the HTML
+    return url;
+  };
+
   return (
     <div className="w-full bg-white p-5 rounded-xl shadow-md flex flex-col gap-2 border-l-4 border-blue-500">
       <h3 className="text-xl font-bold text-gray-800">{title || "Untitled Paper"}</h3>
-      <p className="text-sm text-gray-600">👤 Submitted by: {user?.name || "Unknown User"}</p>
-      <p className="text-sm text-gray-600">👨‍🎓 Authors ({numberOfAuthors}): {authors.join(", ")}</p>
+      <p className="text-sm text-gray-600">👤 Submitted by: {user?.fullName || "Unknown User"}</p>
+      <p className="text-sm text-gray-600">👨‍🎓 Authors ({numberOfAuthors}): {Array.isArray(authors) ? authors.join(", ") : JSON.parse(authors[0]).join(", ")}</p>
       <p className="text-sm text-gray-600">📅 Published on: {new Date(publicationDate).toDateString()}</p>
       <p className="text-sm text-gray-600">🏛 Venue: {venue || "N/A"}</p>
       <p className="text-sm text-gray-600">💰 Incentive: ₹{calculatedAmount}</p>
@@ -42,17 +55,72 @@ const Claim = ({
         </a>
       )}
 
-      <div className="flex flex-col mt-2">
-        <p className="text-sm font-semibold">📄 Paper Front:</p>
-        <img src={paperFront} alt="Paper Front" className="w-40 h-40 object-cover border rounded-md" />
+      <div className="flex flex-col mt-4">
+        <div className="mb-4">
+          <p className="text-sm font-semibold mb-2">📄 Paper Front:</p>
+          <div className="flex flex-col sm:flex-row gap-2 items-start">
+            {/* <div className="w-40 h-40 bg-gray-100 border rounded-md flex items-center justify-center">
+              <div className="text-center p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <p className="text-xs mt-1">PDF Document</p>
+              </div>
+            </div> */}
+            <div className="flex flex-col gap-2">
+              <a 
+                href={paperFront} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="px-3 py-1 bg-blue-500 text-white rounded-md text-sm flex items-center justify-center hover:bg-blue-600 transition w-30"
+              >
+                👁️ View
+              </a>
+              <a 
+                href={paperFront} 
+                download={`paper-front-${getFilenameFromUrl(paperFront)}.pdf`}
+                className="px-3 py-1 bg-green-500 text-white rounded-md text-sm flex items-center justify-center hover:bg-green-600 transition w-30"
+              >
+                ⬇️ Download
+              </a>
+            </div>
+          </div>
+        </div>
 
-        <p className="text-sm font-semibold mt-2">📑 Claim Proof:</p>
-        <img src={claimProof} alt="Claim Proof" className="w-40 h-40 object-cover border rounded-md" />
+        <div>
+          <p className="text-sm font-semibold mb-2">📑 Claim Proof:</p>
+          <div className="flex flex-col sm:flex-row gap-2 items-start">
+            {/* <div className="w-40 h-40 bg-gray-100 border rounded-md flex items-center justify-center">
+              <div className="text-center p-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <p className="text-xs mt-1">PDF Document</p>
+              </div>
+            </div> */}
+            <div className="flex flex-col gap-2">
+              <a 
+                href={claimProof}
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="px-3 py-1 bg-blue-500 text-white rounded-md text-sm flex items-center justify-center hover:bg-blue-600 transition w-30"
+              >
+                👁️ View
+              </a>
+              <a 
+                href={claimProof} 
+                download={`claim-proof-${getFilenameFromUrl(claimProof)}.pdf`}
+                className="px-3 py-1 bg-green-500 text-white rounded-md text-sm flex items-center justify-center hover:bg-green-600 transition w-30"
+              >
+                ⬇️ Download
+              </a>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
-
 
 
 
