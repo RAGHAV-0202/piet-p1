@@ -32,6 +32,20 @@ const ClaimBox2 = () =>{
 
     const [errors, setErrors] = React.useState({});
 
+    function clear(){
+        setAuthors(1);
+        setAuthorNames(Array(7).fill(''))
+        setAffilation(Array(7).fill(''))
+        setCategory("SCIE / WOS / ESCI")
+        setIncentive(10000)
+        setTitle("")
+        setPublicationDate("")
+        setWebLink("")
+        setVenue("")
+        setPaperFront("")
+        setClaimProof("")
+    }
+
     const handleNumberAuthors = (e) => {
         setAuthors(parseInt(e.target.value));
     };
@@ -119,6 +133,7 @@ const ClaimBox2 = () =>{
         formData.append("webLink", webLink);
         formData.append("venue", venue);
         formData.append("category", category);
+        formData.append("totalAmount", incentive);
         formData.append("calculatedAmount", (incentive / authors).toFixed(0));
 
         // Append author names & affiliations correctly
@@ -141,7 +156,7 @@ const ClaimBox2 = () =>{
                     withCredentials: true, // Send authentication cookies
                 }
             );
-
+            clear()
             console.log("Claim submitted successfully:", response.data);
             alert("Claim submitted successfully!");
         } catch (error) {

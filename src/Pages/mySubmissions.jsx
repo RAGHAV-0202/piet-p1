@@ -38,7 +38,7 @@ const Claim = ({ title, authors, publicationDate, venue, webLink, category, calc
       <h3 className="text-xl font-bold text-gray-800">{title || "Untitled Paper"}</h3>
       <p className="text-sm text-gray-600">📅 Published on: {publicationDate || "N/A"}</p>
       <p className="text-sm text-gray-600">🏛 Venue: {venue || "N/A"}</p>
-      <p className="text-sm text-gray-600">👨‍🎓 Authors: {authors}</p>
+      <p className="text-sm text-gray-600">👨‍🎓 Authors: {authors.length ? authors.join(", ") : "NA"}</p>
       <p className="text-sm text-gray-600">📂 Category: {category}</p>
       <p className="text-sm text-gray-600">💰 Incentive: ₹{calculatedAmount}</p>
       {webLink && (
