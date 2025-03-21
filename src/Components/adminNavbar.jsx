@@ -47,9 +47,7 @@ const AdminNavbar = () => {
                 </div>
             </a>
             
-            {/* User Profile */}
-            <a href="/admin/profile" className="navProfile text-black user w-[220px] h-full flex flex-row items-center gap-4 p-2 rounded-3xl cursor-pointer transition-all duration-300 hover:bg-white/20 hover:shadow-md hover:bg-[linear-gradient(75deg,_rgba(146,136,252,1)_0%,_rgba(124,120,245,1)_100%)] shadow-md">
-                {/* Profile Image */}
+            {/* <a href="/admin/profile" className="navProfile text-black user w-[220px] h-full flex flex-row items-center gap-4 p-2 rounded-3xl cursor-pointer transition-all duration-300 hover:bg-white/20 hover:shadow-md hover:bg-[linear-gradient(75deg,_rgba(146,136,252,1)_0%,_rgba(124,120,245,1)_100%)] shadow-md">
                 <div className="left flex justify-center items-center">
                     <img 
                         className="w-[55px] h-[55px] rounded-full border-[3px] border-white shadow-lg"
@@ -58,12 +56,11 @@ const AdminNavbar = () => {
                     />
                 </div>
 
-                {/* Name & Role */}
                 <div className="right text-black">
                     <p className="text-lg font-semibold name">{data.fullName}</p>
                     <p className="text-sm text-zinc-900 designation">{data.designation}</p>
                 </div>
-            </a>
+            </a> */}
         </div>
     );
 };

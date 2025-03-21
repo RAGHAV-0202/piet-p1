@@ -11,7 +11,8 @@ const Options = () => {
     return (
         <div className="actions w-full flex flex-wrap gap-10 p-10 bg-white bg-opacity-70 backdrop-blur-md rounded-2xl shadow-xl">
             {[
-                { href: "/admin/submissions", icon: "fa-folder", text: "ALl Submissions" },
+                { href: "/admin/submissions", icon: "fa-folder", text: "ALL Submissions" },
+                { href: "/admin/users", icon: "fa-user", text: "ALL Users" }
             ].map((item, index) => (
                 <a
                     key={index}

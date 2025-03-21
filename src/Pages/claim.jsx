@@ -16,8 +16,7 @@ const Heading = ()=>{
 
 const ClaimBox2 = () =>{
 
-  
-
+    const [isLoading, setIsLoading] = React.useState(false);
     const [authors, setAuthors] = React.useState(1);
     const [authorNames, setAuthorNames] = React.useState(Array(7).fill(''));
     const [authorAffiliation, setAffilation] = React.useState(Array(7).fill(''));
@@ -125,6 +124,8 @@ const ClaimBox2 = () =>{
             return;
         }
 
+        setIsLoading(true);
+        
         const formData = new FormData();
 
         formData.append("title", title);
@@ -156,12 +157,14 @@ const ClaimBox2 = () =>{
                     withCredentials: true, // Send authentication cookies
                 }
             );
-            clear()
+            clear();
             console.log("Claim submitted successfully:", response.data);
             alert("Claim submitted successfully!");
         } catch (error) {
             console.error("Error submitting claim:", error.response?.data || error.message);
             alert(error.response?.data?.message || "Failed to submit claim");
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -181,6 +184,7 @@ const ClaimBox2 = () =>{
                         onChange={handleCategory}
                         defaultValue={"Research Paper"}
                         className="w-full border h-12 rounded-sm max-w-[400px] px-6 flex items-center"
+                        disabled={isLoading}
                     >
                     <option value={["SCIE / WOS / ESCI" , 10000]}>SCIE / WOS / ESCI (10000)</option>
                     <option value={["ESCI SCOPUS" , 5000]}>ESCI SCOPUS (5000)</option>
@@ -199,6 +203,7 @@ const ClaimBox2 = () =>{
                         className={`w-full border h-8 rounded-sm border-transparent bg-zinc-100 px-6 py-6 ${errors.title ? errorClass : ''}`}
                         type="text"
                         placeholder="Title"
+                        disabled={isLoading}
                     />
                 </span>
 
@@ -209,6 +214,7 @@ const ClaimBox2 = () =>{
                         onChange={handleNumberAuthors}
                         defaultValue={1}
                         className="w-full border h-12 rounded-sm max-w-[400px] px-6 flex items-center"
+                        disabled={isLoading}
                     >
                         {[...Array(7)].map((_, index) => (
                             <option key={index} value={index + 1}>{index + 1}</option>
@@ -227,6 +233,7 @@ const ClaimBox2 = () =>{
                                     className={`w-full border h-8 rounded-sm border-transparent bg-zinc-100 px-6 py-6 ${errors[`author${index}`] ? errorClass : ''}`}
                                     type="text"
                                     placeholder="Author's Name"
+                                    disabled={isLoading}
                                 />
                                 <input
                                     value={authorAffiliation[index]}
@@ -234,6 +241,7 @@ const ClaimBox2 = () =>{
                                     className={`w-full border h-8 rounded-sm border-transparent bg-zinc-100 px-6 py-6 ${errors[`affiliation${index}`] ? errorClass : ''}`}
                                     type="text"
                                     placeholder="Author's Affiliation"
+                                    disabled={isLoading}
                                 />
                             </div>
                         </span>
@@ -248,6 +256,7 @@ const ClaimBox2 = () =>{
                         onChange={(e) => setPublicationDate(e.target.value)}
                         className={`w-full border h-8 rounded-sm border-transparent bg-zinc-200 px-6 py-6 ${errors.title ? errorClass : ''}`}
                         type="date"
+                        disabled={isLoading}
                     />
                 </span>
 
@@ -259,6 +268,7 @@ const ClaimBox2 = () =>{
                         className={`w-full border h-8 rounded-sm border-transparent bg-zinc-200 px-6 py-6 ${errors.title ? errorClass : ''}`}
                         type="text"
                         placeholder="Link"
+                        disabled={isLoading}
                     />
                 </span>
 
@@ -270,6 +280,7 @@ const ClaimBox2 = () =>{
                         className={`w-full border h-8 rounded-sm border-transparent bg-zinc-200 px-6 py-6 ${errors.title ? errorClass : ''}`}
                         type="text"
                         placeholder="Venue"
+                        disabled={isLoading}
                     />
                 </span>
 
@@ -277,7 +288,7 @@ const ClaimBox2 = () =>{
                     <p className="font-medium text-[14px]">Research Paper Front <span className="text-red-600">*</span></p>
                     <label
                         htmlFor="paperFrontUpload"
-                        className="cursor-pointer inline-flex items-center gap-2 px-5 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition"
+                        className={`cursor-pointer inline-flex items-center gap-2 px-5 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
                         {/* icon */}
                         Upload PDF
@@ -287,6 +298,7 @@ const ClaimBox2 = () =>{
                             accept="application/pdf"
                             onChange={handleFileChange}
                             className="hidden"
+                            disabled={isLoading}
                         />
                     </label>
 
@@ -301,7 +313,7 @@ const ClaimBox2 = () =>{
                     <p className="font-medium text-[14px]">Proof of Claim<span className="text-red-600">*</span></p>
                     <label
                         htmlFor="claimProofUpload"
-                        className="cursor-pointer inline-flex items-center gap-2 px-5 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition"
+                        className={`cursor-pointer inline-flex items-center gap-2 px-5 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                     >
                         {/* icon */}
                         Upload PDF
@@ -311,6 +323,7 @@ const ClaimBox2 = () =>{
                             accept="application/pdf"
                             onChange={handleProofChange}
                             className="hidden"
+                            disabled={isLoading}
                         />
                     </label>
 
@@ -327,18 +340,26 @@ const ClaimBox2 = () =>{
                 </span>
 
                 <div className="w-full flex items-center justify-center">
-                    <button onClick={handleSubmit} type="button" className="w-[200px] h-[40px] cursor-pointer flex items-center justify-center gap-2 px-5 py-2 bg-green-600 text-white font-medium rounded-md hover:bg-green-700 transition">
-                        Submit
+                    <button 
+                        onClick={handleSubmit} 
+                        type="button" 
+                        className={`w-[200px] h-[40px] cursor-pointer flex items-center justify-center gap-2 px-5 py-2 bg-green-600 text-white font-medium rounded-md hover:bg-green-700 transition ${isLoading ? 'opacity-75 cursor-not-allowed' : ''}`}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? (
+                            <>
+                                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Submitting...
+                            </>
+                        ) : (
+                            'Submit'
+                        )}
                     </button>
                 </div>
-
-
-
             </div>
-
-
-
-
         </div>
     )
 }

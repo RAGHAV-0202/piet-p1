@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route , Navigate} from "react-router-dom";
 import Dashboard from "./Pages/dashboard.jsx";
 import Error from "./Pages/error.jsx";
 import Claim from "./Pages/claim.jsx";
@@ -25,10 +25,12 @@ const ReactRouterSetup = () => {
         <Route path="/profile" element={<Profile/>}/>
         <Route path="*" element={<Error />} />
 
-        <Route path="admin/dashboard" element={<AdminDashboard />} />
-        <Route path="admin/login" element={<AdminLogin />} />
-        <Route path="admin/submissions" element={<AdminSubmissions />} />
-        <Route path="admin/users" element={<AdminManageUsers />} />
+        <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route path="/admin" element={<Navigate to="/admin/login" />} />
+        <Route path="/admin/submissions" element={<AdminSubmissions />} />
+        <Route path="/admin/users" element={<AdminManageUsers />} />
+
       </Routes>
     </Router>
   );

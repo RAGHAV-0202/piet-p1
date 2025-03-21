@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState , useEffect } from "react";
 import axios from "axios";
 import "../CSS/responsive.css"
 import baseUrl from "../baseurl.js";
@@ -23,13 +23,68 @@ const Claim = ({
   totalAmount,
   category,
   status,
-  _id
+  _id,
+  onStatusChange, // New prop to handle status updates
+  onDelete // New prop to handle deletion
 }) => {
+  const [processing, setProcessing] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  
   // Function to extract filename from Cloudinary URL
   const getFilenameFromUrl = (url) => {
     if (!url) return '';
     const urlParts = url.split('/');
     return urlParts[urlParts.length - 1].split('.')[0];
+  };
+
+  // Function to set status to "Processed"
+  const handleSetProcessed = async () => {
+    try {
+      setProcessing(true);
+      const response = await axios.post(`${baseUrl}api/admin/update`, {
+        _id,
+        status: "Processed"
+      }, { withCredentials: true });
+      
+      if (response.status === 200) {
+        // Call the parent component's callback to update UI
+        if (onStatusChange) onStatusChange(_id, "Processed");
+      } else {
+        alert("Failed to update claim status");
+      }
+    } catch (error) {
+      console.error("Error updating claim status:", error);
+      alert("An error occurred while updating claim status");
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  // Function to delete claim
+  const handleDelete = async () => {
+    // Confirm before deletion
+    if (!window.confirm("Are you sure you want to delete this claim? This action cannot be undone.")) {
+      return;
+    }
+    
+    try {
+      setDeleting(true);
+      const response = await axios.post(`${baseUrl}api/admin/delete`, {
+        _id
+      }, { withCredentials: true });
+      
+      if (response.status === 200) {
+        // Call the parent component's callback to update UI
+        if (onDelete) onDelete(_id);
+      } else {
+        alert("Failed to delete claim");
+      }
+    } catch (error) {
+      console.error("Error deleting claim:", error);
+      alert("An error occurred while deleting the claim");
+    } finally {
+      setDeleting(false);
+    }
   };
 
   return (
@@ -64,13 +119,13 @@ const Claim = ({
               >
                 👁️ View
               </a>
-              <a 
+              {/* <a 
                 href={paperFront} 
                 download={`paper-front-${getFilenameFromUrl(paperFront)}.pdf`}
                 className="px-3 py-1 bg-green-500 text-white rounded-md text-sm flex items-center justify-center hover:bg-green-600 transition w-30"
               >
                 ⬇️ Download
-              </a>
+              </a> */}
             </div>
           </div>
         </div>
@@ -87,16 +142,54 @@ const Claim = ({
               >
                 👁️ View
               </a>
-              <a 
+              {/* <a 
                 href={claimProof} 
                 download={`claim-proof-${getFilenameFromUrl(claimProof)}.pdf`}
                 className="px-3 py-1 bg-green-500 text-white rounded-md text-sm flex items-center justify-center hover:bg-green-600 transition w-30"
               >
                 ⬇️ Download
-              </a>
+              </a> */}
             </div>
           </div>
         </div>
+      </div>
+      
+      {/* Action Buttons */}
+      <div className="mt-4 flex flex-row gap-3">
+        <button 
+          onClick={handleSetProcessed}
+          disabled={processing || status === "Processed"}
+          className={`px-4 py-2 rounded-md text-sm font-medium flex items-center justify-center transition
+            ${status === "Processed" 
+              ? 'bg-gray-300 text-gray-600 cursor-not-allowed' 
+              : 'bg-green-500 text-white hover:bg-green-600'}`}
+        >
+          {processing ? (
+            <>
+              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Processing...
+            </>
+          ) : status === "Processed" ? "✓ Processed" : "✓ Set as Processed"}
+        </button>
+        
+        <button 
+          onClick={handleDelete}
+          disabled={deleting}
+          className="px-4 py-2 bg-red-500 text-white rounded-md text-sm font-medium flex items-center justify-center hover:bg-red-600 transition"
+        >
+          {deleting ? (
+            <>
+              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Deleting...
+            </>
+          ) : "🗑️ Delete Claim"}
+        </button>
       </div>
     </div>
   );
@@ -230,6 +323,29 @@ const AdminSubmissions = () => {
     }
   };
 
+  // Function to handle status change
+  const handleStatusChange = (id, newStatus) => {
+    // Update both submissions arrays
+    const updateSubmission = (submissionArray) => {
+      return submissionArray.map(submission => {
+        if (submission._id === id) {
+          return { ...submission, status: newStatus };
+        }
+        return submission;
+      });
+    };
+    
+    setSubmissions(updateSubmission(submissions));
+    setFilteredSubmissions(updateSubmission(filteredSubmissions));
+  };
+  
+  // Function to handle claim deletion
+  const handleDelete = (id) => {
+    // Remove the deleted submission from both arrays
+    setSubmissions(submissions.filter(submission => submission._id !== id));
+    setFilteredSubmissions(filteredSubmissions.filter(submission => submission._id !== id));
+  };
+
   return (
     <div className="h-auto min-h-[100vh] w-full flex flex-row pr-5">
       <AdminSideBar />
@@ -325,7 +441,12 @@ const AdminSubmissions = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredSubmissions.map((submission) => (
-                <Claim key={submission._id} {...submission} />
+                <Claim 
+                  key={submission._id} 
+                  {...submission} 
+                  onStatusChange={handleStatusChange}
+                  onDelete={handleDelete}
+                />
               ))}
             </div>
           )}
