@@ -1,76 +1,130 @@
-import React from "react";
-import axios from "axios"
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import baseUrl from "../baseurl.js";
 import { useNavigate } from "react-router-dom";
-import "../CSS/responsive.css"
 
 const Navbar = () => {
-    const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [data, setData] = useState({
+    fullName: "Name Surname",
+    profileImage: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+    designation: "Staff"
+  });
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
-    const [data , setData] = React.useState({fullName : "Name" , profileImage : "https://cdn-icons-png.flaticon.com/512/149/149071.png"  , designation : "Staff" })
+  useEffect(() => {
+    const getUser = async () => {
+      try {
+        const response = await axios.get(
+          `${baseUrl}api/auth/loggedIn`,
+          { withCredentials: true },
+          { withCredentials: true }
+        );
+        setData(response.data.data.user);
+      } catch (err) {
+        console.log("error while checking if logged in");
+        console.log(err);
+        navigate("/login");
+      }
+    };
 
-    React.useEffect(()=>{
-        const getUser = async()=>{
-            try{
-                const response = await axios.get(`${baseUrl}api/auth/loggedIn` , { withCredentials: true } , { withCredentials: true })
+    getUser();
+  }, [navigate]);
 
-                // console.log(response.data.data.user)
-                setData(response.data.data.user)
-            }catch(err){
-                console.log("error while checking if logged in")
-                console.log(err)
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownOpen && !event.target.closest('.profile-dropdown')) {
+        setDropdownOpen(false);
+      }
+    }
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [dropdownOpen]);
 
-                navigate("/login")
-            }
-        }
+  const handleLogout = async () => {
+    try {
+      await axios.post(
+        `${baseUrl}api/auth/logout`,
+        { withCredentials: true },
+        { withCredentials: true }
+      );
+      navigate("/login");
+    } catch (err) {
+      console.log("error while logging out");
+      console.log(err);
+    }
+  };
 
-        getUser()
-
-        
-    } , [])
-
-    console.log(data.fullName , data.profileImage , data.designation)
-
-    return (
-        <div className="navbar py-3 px-6 flex-1 w-[80vw] h-[80px] flex items-center justify-end backdrop-blur-md bg-white/10  rounded-lg ">
-            {/* User Profile */}
-
-            <a href="/dashboard" className="sidebar_logo_nav h-auto w-[280px] flex flex-row items-center hidden">
-            <button className="h-[60px]">
-                <img
-                className="h-[60px]"
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBlh8qU-hFL2yJUpMHEMY0sprJ7UqhJA2wTjzCJpC---5hXlfQY1yW02ul-ScBLpgW&usqp=CAU"
-                alt="logo"
-                />
-            </button>
-
-            <div className="sideBar_branding w-full h-full flex flex-col capitalize font-semibold leading-5 pl-5">
-                <span className="uppercase">panipat insitute of</span>
-                <span className="uppercase">Engineering and</span>
-                <span className="uppercase">technology</span>
-            </div>
-            </a>
-
-            <a href="/profile" className="navProfile text-black user w-[220px] h-full flex flex-row items-center gap-4 p-2 rounded-3xl cursor-pointer transition-all duration-300 hover:bg-white/20 hover:shadow-md hover:bg-[linear-gradient(75deg,_rgba(146,136,252,1)_0%,_rgba(124,120,245,1)_100%)] 
-                        shadow-md">
-                
-                {/* Profile Image */}
-                <div className="left flex justify-center items-center">
-                    <img 
-                        className="w-[55px] h-[55px] rounded-full border-[3px] border-white shadow-lg"
-                        src={data.profileImage} 
-                        alt="user" 
-                    />
-                </div>
-
-                {/* Name & Role */}
-                <div className="right text-black">
-                    <p className="text-lg font-semibold name">{data.fullName}</p>
-                    <p className="text-sm text-zinc-900 designation">{data.designation}</p>
-                </div>
-            </a>
+  return (
+    <header className="bg-white border-b flex justify-between items-center p-4">
+      {/* Left side - Institute Logo for mobile (visible on mobile only) */}
+      <div className="md:hidden flex items-center">
+        <img
+          className="h-8 w-8"
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBlh8qU-hFL2yJUpMHEMY0sprJ7UqhJA2wTjzCJpC---5hXlfQY1yW02ul-ScBLpgW&usqp=CAU"
+          alt="PIET logo"
+        />
+        <div className="ml-2 text-xs font-bold text-blue-900">
+          <span className="block uppercase">PIET</span>
         </div>
-    );
+      </div>
+      
+      {/* Spacer for desktop */}
+      <div className="hidden md:block"></div>
+      
+      {/* Right side - User Profile */}
+      <div className="profile-dropdown relative">
+        <button 
+          className="flex items-center space-x-3 focus:outline-none"
+          onClick={() => setDropdownOpen(!dropdownOpen)}
+        >
+          <div className="hidden md:block text-right">
+            <div className="text-sm font-medium text-blue-900">{data.fullName}</div>
+            <div className="text-xs text-gray-500">{data.designation}</div>
+          </div>
+          <div className="h-8 w-8 md:h-10 md:w-10 rounded-full overflow-hidden border-2 border-gray-200">
+            <img 
+              className="h-full w-full object-cover"
+              src={data.profileImage} 
+              alt="Profile" 
+            />
+          </div>
+        </button>
+        
+        {/* Dropdown Menu */}
+        {dropdownOpen && (
+          <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+            <a 
+              href="/profile" 
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              <i className="fa-solid fa-user mr-2"></i>
+              Your Profile
+            </a>
+            {/* <a 
+              href="/settings" 
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              <i className="fa-solid fa-gear mr-2"></i>
+              Settings
+            </a> */}
+            <div className="border-t border-gray-100"></div>
+            <button 
+              onClick={handleLogout}
+              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+              <i className="fa-solid fa-arrow-right-from-bracket mr-2"></i>
+              Logout
+            </button>
+          </div>
+        )}
+      </div>
+    </header>
+  );
 };
 
 export default Navbar;

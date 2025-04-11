@@ -55,12 +55,12 @@ const Profile = () => {
       <SideBar />
       <div className="content w-full h-full flex flex-col">
         <Navbar />
-        <div className="areaContent bg-[#EDEFFD] flex w-full h-auto min-h-[calc(100vh-120px)] rounded-2xl mt-5 shadow-lg flex-col items-center">
+        <div className="areaContent flex w-full h-auto min-h-[calc(100vh-120px)] rounded-2xl flex-col items-center">
           {isLoading ? (
             <ProfileSkeleton />
           ) : (
             <>
-              <div className="bg bg-red-700 flex w-full h-[200px] rounded-3xl overflow-hidden">
+              <div className="bg bg-red-700 flex w-full h-[200px] rounded-[0] rounded-b-2xl overflow-hidden">
                 <img className="w-full h-full" src="https://static.vecteezy.com/system/resources/previews/012/972/566/large_2x/color-meaning-of-color-variety-color-value-background-color-free-photo.jpg" alt="bg"></img>
               </div>
               <div className="info p-10 flex flex1 w-full h-full flex-col">

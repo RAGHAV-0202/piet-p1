@@ -267,10 +267,10 @@ const ClaimBox2 = () => {
   const errorClass = "border-red-500";
 
   return (
-    <div className="claimBox flex w-full h-full rounded-2xl p-5 flex-col items-center">
+    <div className="claimBox  flex w-full h-full rounded-2xl p-5 flex-col items-center">
       <h1 className="text-xl font-bold pb-10">Enter Details for Claim</h1>
 
-      <div className="areaForDetails w-full bg-white py-10 rounded-3xl px-10 max-w-[800px] flex flex-col">
+      <div className="areaForDetails w-full bg-[#EDEFFD]  py-10 rounded-3xl px-10 max-w-[800px] flex flex-col shadow-2xl border-[1px] border-zinc-100">
         <span className="mb-5">
           <p>
             Category of submission <span className="text-red-600">*</span>
@@ -613,7 +613,7 @@ const Claim = () => {
       <SideBar />
       <div className="content flex flex-col w-full">
         <Navbar />
-        <div className="areaContentClaim bg-[#EDEFFD] flex w-full h-full py-[20px] px-[20px] min-h-[calc(100vh-120px)] rounded-2xl mt-5 shadow-2xs flex-col">
+        <div className="areaContentClaim flex w-full h-full py-[20px] px-[20px] min-h-[calc(100vh-120px)] rounded-2xl mt-5 shadow-2xs flex-col">
           <ClaimBox2 />
         </div>
       </div>

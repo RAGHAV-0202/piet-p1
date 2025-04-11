@@ -103,7 +103,7 @@ const Submissions = () => {
       <SideBar />
       <div className="content w-full h-full flex flex-col">
         <Navbar />
-        <div className="areaContent bg-[#EDEFFD] flex w-full py-10 px-10 min-h-[calc(100vh-120px)] h-auto rounded-2xl mt-5 shadow-lg flex-col">
+        <div className="areaContent flex w-full  px-10 min-h-[calc(100vh-120px)] h-auto rounded-2xl mt-5  flex-col">
           <UserWelcome name={name} isLoading={isLoading} />
           <div className="w-full flex flex-col gap-5">
             {isLoading ? (
