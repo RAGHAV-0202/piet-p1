@@ -327,7 +327,7 @@ const Users = () => {
     <div className="dashboard_main_div h-auto min-h-screen w-screen flex flex-row">
       <AdminSideBar/>
       <div className="dashboard_content w-[80%] flex flex-col flex-1">
-        <AdminNavbar/>
+        {/* <AdminNavbar/> */}
         <div className="dashboard_areaContent bg-[#EDEFFD] flex w-full min-h-[calc(100vh-80px)] h-auto rounded-2xl mt-5 shadow-2xs flex-col p-5 md:p-10">
           <div className="bg-white shadow rounded-lg w-full">
             <div className="p-4 border-b">

@@ -240,7 +240,7 @@ const ClaimBox2 = () => {
         // Log FormData contents (add this right before the axios.post call)
         console.log("FormData contents:");
         for (let [key, value] of formData.entries()) {
-        console.log(`${key}: ${value instanceof File ? value.name : value}`);
+          console.log(`${key}: ${value instanceof File ? value.name : value}`);
         }
         const response = await axios.post(
         `${baseUrl}api/form/claim`,

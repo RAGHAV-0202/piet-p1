@@ -58,6 +58,8 @@ const Dashboard = () => {
   const [recentClaims, setRecentClaims] = useState([]);
   const [monthlyClaimData, setMonthlyClaimData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [totalClaims, setTotalClaims] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(0);
   
   // Fetch data from backend
   useEffect(() => {
@@ -68,24 +70,37 @@ const Dashboard = () => {
         console.log("API Response:", response.data.data);
 
         if (Array.isArray(response.data.data) && response.data.data.length > 0) {
+          const allClaims = response.data.data;
+          
           // Sort claims by createdAt date (newest first)
-          const sortedClaims = [...response.data.data].sort((a, b) => 
+          const sortedClaims = [...allClaims].sort((a, b) => 
             new Date(b.createdAt) - new Date(a.createdAt)
           );
           
           // Set only top 3 recent claims for the dashboard
           setRecentClaims(sortedClaims.slice(0, 3));
           
-          // Process all claims data for the chart
-          processClaimsForChart(response.data.data);
+          // Process all claims data for the chart (not just the 3 recent ones)
+          processClaimsForChart(allClaims);
+          
+          // Set total claims count
+          setTotalClaims(allClaims.length);
+          
+          // Calculate total amount from all claims
+          const total = allClaims.reduce((sum, claim) => sum + claim.calculatedAmount, 0);
+          setTotalAmount(total);
         } else {
           setRecentClaims([]);
           setMonthlyClaimData([]);
+          setTotalClaims(0);
+          setTotalAmount(0);
         }
       } catch (err) {
         console.error("Error fetching submissions:", err);
         setRecentClaims([]);
         setMonthlyClaimData([]);
+        setTotalClaims(0);
+        setTotalAmount(0);
       } finally {
         setLoading(false);
       }
@@ -176,7 +191,7 @@ const Dashboard = () => {
                 <h2 className="text-lg font-medium">Recent Claims</h2>
                 <a href="/claim" className="text-green-600 text-sm hover:underline">View all</a>
               </div>
-              <p className="text-sm text-gray-500 mb-4">Your recently submitted claims</p>
+              <p className="text-sm text-gray-500 mb-4">Your recently submitted claims (showing top 3)</p>
               
               {loading ? (
                 <div className="space-y-4">
@@ -227,7 +242,7 @@ const Dashboard = () => {
               {/* Submission Activity Chart */}
               <div className="bg-white p-4 rounded-lg shadow">
                 <h2 className="text-lg font-medium mb-2">Submission Activity</h2>
-                <p className="text-xs text-gray-500 mb-4">Your submission trends over time</p>
+                <p className="text-xs text-gray-500 mb-4">Your submission trends over time (all claims)</p>
                 
                 {loading ? (
                     <div className="h-48 bg-gray-100 animate-pulse rounded"></div>
@@ -247,6 +262,7 @@ const Dashboard = () => {
               {/* Claims Summary Card */}
               <div className="bg-white p-4 rounded-lg shadow">
                 <h2 className="text-lg font-medium mb-2">Claims Summary</h2>
+                <p className="text-xs text-gray-500 mb-4">Statistics from all your claims</p>
                 
                 {loading ? (
                   <div className="grid grid-cols-2 gap-4">
@@ -257,11 +273,11 @@ const Dashboard = () => {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="bg-blue-50 p-3 rounded">
                       <div className="text-xs text-gray-500">Total Claims</div>
-                      <div className="text-xl font-medium">{recentClaims.length}</div>
+                      <div className="text-xl font-medium">{totalClaims}</div>
                     </div>
                     <div className="bg-green-50 p-3 rounded">
                       <div className="text-xs text-gray-500">Total Amount</div>
-                      <div className="text-xl font-medium">₹{recentClaims.reduce((sum, claim) => sum + claim.calculatedAmount, 0)}</div>
+                      <div className="text-xl font-medium">₹{totalAmount}</div>
                     </div>
                   </div>
                 )}
@@ -307,7 +323,6 @@ const StatusBadge = ({ status }) => {
     </span>
   );
 };
-
 
 const SubmissionChart = ({ data }) => {
   const [dataKey, setDataKey] = useState("count");
@@ -385,6 +400,5 @@ const SubmissionChart = ({ data }) => {
     </div>
   );
 };
-
 
 export default Dashboard;
