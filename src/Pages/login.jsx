@@ -29,10 +29,10 @@ const LoginNav = () => {
     } , [])
 
   return (
-    <div className="navbar shadow-md px-10 w-full h-[60px] flex items-center bg-white">
+    <div className="navbar shadow-md px-4 md:px-10 w-full h-[60px] flex items-center bg-white">
       <div className="logo flex items-center">
-        <img className="h-[60px]" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBlh8qU-hFL2yJUpMHEMY0sprJ7UqhJA2wTjzCJpC---5hXlfQY1yW02ul-ScBLpgW&usqp=CAU" alt="logo" />
-        <div className="branding pl-5 text-lg font-semibold leading-5">
+        <img className="h-[40px] md:h-[60px]" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBlh8qU-hFL2yJUpMHEMY0sprJ7UqhJA2wTjzCJpC---5hXlfQY1yW02ul-ScBLpgW&usqp=CAU" alt="logo" />
+        <div className="branding pl-2 md:pl-5 text-sm md:text-lg font-semibold leading-4 md:leading-5">
           <span className="uppercase block">Panipat Institute of</span>
           <span className="uppercase block">Engineering and</span>
           <span className="uppercase block">Technology</span>
@@ -150,8 +150,8 @@ export default function Login() {
   return (
     <div className="register_page w-full min-h-screen bg-[#EDEFFD] flex flex-col items-center overflow-hidden">
       <LoginNav />
-      <div className="content w-full min-h-[calc(100vh-60px)] flex flex-row items-center justify-center flex-1">
-        <div className="left w-[50%] min-h-[calc(100vh-70px)] flex flex-col gap-5 items-center justify-center">
+      <div className="content w-full min-h-[calc(100vh-60px)] flex flex-col md:flex-row items-center justify-center flex-1 px-4 md:px-0">
+        <div className="left w-full md:w-[50%] py-8 md:min-h-[calc(100vh-70px)] flex flex-col gap-5 items-center justify-center">
           <div className="form w-full max-w-[500px]">
             <h1 className="font-bold text-xl pb-6">Login</h1>
             
@@ -210,7 +210,8 @@ export default function Login() {
             </div>
           </div>
         </div>
-        <div className="right w-[50%] h-full flex items-center justify-center">
+        {/* Image only visible on md screens and above */}
+        <div className="right hidden md:flex w-[50%] h-full items-center justify-center">
           <img className="w-full max-w-[600px]" src={bgImg} alt="background" />
         </div>
       </div>
