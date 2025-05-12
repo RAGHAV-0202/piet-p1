@@ -103,11 +103,16 @@ export default function Register() {
   });
   const [errors, setErrors] = React.useState({});
   const [touched, setTouched] = React.useState({});
+  const [apiError, setApiError] = React.useState("");
+  const [formError, setFormError] = React.useState("");
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     // Mark field as touched
     setTouched({ ...touched, [e.target.name]: true });
+    // Clear form-level errors when user makes changes
+    setFormError("");
+    setApiError("");
     // Validate the field on change
     validateField(e.target.name, e.target.value);
   };
@@ -123,6 +128,10 @@ export default function Register() {
       error = "Password must be at least 6 characters";
     } else if (name === "confirmPassword" && value !== formData.password) {
       error = "Passwords do not match";
+    } else if (name === "bankAccount" && !/^\d+$/.test(value)) {
+      error = "Bank account must contain only numbers";
+    } else if (name === "ifsc" && !/^[A-Z]{4}0[A-Z0-9]{6}$/.test(value)) {
+      error = "Invalid IFSC code format";
     }
     
     setErrors(prev => ({ ...prev, [name]: error }));
@@ -157,20 +166,38 @@ export default function Register() {
     const isValid = validateStep(step);
     if (isValid) {
       setStep(prevStep => prevStep + 1);
+      setFormError(""); // Clear form error when moving to next step
+    } else {
+      setFormError("Please fix the errors before proceeding");
     }
   };
+  
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
     const isValid = validateStep(4);
-    if (!isValid) return;
+    if (!isValid) {
+      setFormError("Please fix the errors before submitting");
+      return;
+    }
     
     try {
+      setApiError("");
       const response = await axios.post(baseUrl + "api/auth/register", formData, { withCredentials: true });
-      navigate("/dashboard")
+      if (response.data.success) {
+        navigate("/dashboard");
+      } else {
+        setApiError(response.data.message || "Registration failed");
+      }
     } catch (error) {
       console.log("Error while registering");
       console.log(error);
+      
+      if (error.response && error.response.data) {
+        setApiError(error.response.data.message || "Registration failed. Please try again.");
+      } else {
+        setApiError("Network error. Please check your connection and try again.");
+      }
     }
   };
 
@@ -178,7 +205,7 @@ export default function Register() {
     const baseClass = "w-full mt-1 h-[2%] rounded-lg border-[1px] px-3 py-2 md:py-[1%]";
     // Only show error border if field has been touched and has an error
     if (touched[fieldName] && errors[fieldName]) {
-      return `${baseClass} border-red-500`;
+      return `${baseClass} border-red-500 bg-red-50`;
     }
     return `${baseClass} border-blue-400`;
   };
@@ -200,11 +227,26 @@ export default function Register() {
           <div className="form w-full h-auto">
             <Progress step={step} setStep={setStep} />
             <Info step={step} />
+            
+            {/* Form-level error message */}
+            {formError && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                <p className="font-medium">{formError}</p>
+              </div>
+            )}
+            
+            {/* API error message */}
+            {apiError && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                <p className="font-medium">{apiError}</p>
+              </div>
+            )}
+            
             <div className="inputArea flex flex-col w-full h-auto">
               {step == 1 && (
                 <>
                   <span className="mb-[10px]">
-                    <span className="pb-5 text-[14px]">Full Name</span>
+                    <span className="pb-5 text-[14px] font-medium">Full Name</span>
                     <input 
                       name="fullName" 
                       value={formData.fullName} 
@@ -217,7 +259,7 @@ export default function Register() {
                     {showError("fullName")}
                   </span>
                   <span className="mb-[10px]">
-                    <span className="pb-5 text-[14px]">Email Address</span>
+                    <span className="pb-5 text-[14px] font-medium">Email Address</span>
                     <input 
                       name="email" 
                       value={formData.email} 
@@ -230,7 +272,7 @@ export default function Register() {
                     {showError("email")}
                   </span>
                   <span className="mb-[10px]">
-                    <span className="pb-5 text-[14px]">Set Password</span>
+                    <span className="pb-5 text-[14px] font-medium">Set Password</span>
                     <input 
                       name="password" 
                       value={formData.password} 
@@ -243,7 +285,7 @@ export default function Register() {
                     {showError("password")}
                   </span>
                   <span className="mb-[10px]">
-                    <span className="pb-5 text-[14px]">Confirm Password</span>
+                    <span className="pb-5 text-[14px] font-medium">Confirm Password</span>
                     <input 
                       name="confirmPassword" 
                       value={formData.confirmPassword} 
@@ -260,7 +302,7 @@ export default function Register() {
               {step == 2 && (
                 <>
                   <span className="mb-[10px]">
-                    <span className="pb-5">Joining Date</span>
+                    <span className="pb-5 text-[14px] font-medium">Joining Date</span>
                     <input 
                       name="doj" 
                       value={formData.doj} 
@@ -272,7 +314,7 @@ export default function Register() {
                     {showError("doj")}
                   </span>
                   <span className="mb-[10px]">
-                    <span className="pb-5">Department</span>
+                    <span className="pb-5 text-[14px] font-medium">Department</span>
                     <select 
                       name="department" 
                       value={formData.department} 
@@ -294,7 +336,7 @@ export default function Register() {
                     {showError("department")}
                   </span>
                   <span className="mb-[10px]">
-                    <span className="pb-5">Designation</span>
+                    <span className="pb-5 text-[14px] font-medium">Designation</span>
                     <input 
                       name="designation" 
                       value={formData.designation} 
@@ -307,7 +349,7 @@ export default function Register() {
                     {showError("designation")}
                   </span>
                   <span className="mb-[10px]">
-                    <span className="pb-5">Employee ID</span>
+                    <span className="pb-5 text-[14px] font-medium">Employee ID</span>
                     <input 
                       name="employeeId" 
                       value={formData.employeeId} 
@@ -324,7 +366,7 @@ export default function Register() {
               {step == 3 && (
                 <>
                   <span className="mb-[10px]">
-                    <span className="pb-5">Scopus ID</span>
+                    <span className="pb-5 text-[14px] font-medium">Scopus ID</span>
                     <input 
                       name="scopusId" 
                       value={formData.scopusId} 
@@ -337,7 +379,7 @@ export default function Register() {
                     {showError("scopusId")}
                   </span>
                   <span className="mb-[10px]">
-                    <span className="pb-5">Vidwan ID</span>
+                    <span className="pb-5 text-[14px] font-medium">Vidwan ID</span>
                     <input 
                       name="vidhwanId" 
                       value={formData.vidhwanId} 
@@ -350,7 +392,7 @@ export default function Register() {
                     {showError("vidhwanId")}
                   </span>
                   <span className="mb-[10px]">
-                    <span className="pb-5">Google Scholar ID</span>
+                    <span className="pb-5 text-[14px] font-medium">Google Scholar ID</span>
                     <input 
                       name="googleScholarId" 
                       value={formData.googleScholarId} 
@@ -363,7 +405,7 @@ export default function Register() {
                     {showError("googleScholarId")}
                   </span>
                   <span className="mb-[10px]">
-                    <span className="pb-5">ORCID ID</span>
+                    <span className="pb-5 text-[14px] font-medium">ORCID ID</span>
                     <input 
                       name="orcidId" 
                       value={formData.orcidId} 
@@ -380,7 +422,7 @@ export default function Register() {
               {step == 4 && (
                 <>
                   <span className="mb-[10px]">
-                    <span className="pb-5">Bank Account Number</span>
+                    <span className="pb-5 text-[14px] font-medium">Bank Account Number</span>
                     <input 
                       name="bankAccount" 
                       value={formData.bankAccount} 
@@ -393,7 +435,7 @@ export default function Register() {
                     {showError("bankAccount")}
                   </span>
                   <span className="mb-[10px]">
-                    <span className="pb-5">IFSC Code</span>
+                    <span className="pb-5 text-[14px] font-medium">IFSC Code</span>
                     <input 
                       name="ifsc" 
                       value={formData.ifsc} 
@@ -406,7 +448,7 @@ export default function Register() {
                     {showError("ifsc")}
                   </span>
                   <span className="mb-[10px]">
-                    <span className="pb-5">Branch</span>
+                    <span className="pb-5 text-[14px] font-medium">Branch</span>
                     <input 
                       name="branch" 
                       value={formData.branch} 
