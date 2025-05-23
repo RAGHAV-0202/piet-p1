@@ -7,11 +7,11 @@ import "../CSS/claim.css";
 
 const Heading = () => {
   return (
-    <div className="w-full h-[100px] flex pt-5 pb-5 flex-col">
-      <h3 className="font-bold text-2xl">Details for Submission</h3>
-      <h6 className="font-semibold text-[14px] text-gray-500">
-        Fill all the details for the submission
-      </h6>
+    <div className="w-full flex pt-8 pb-6 flex-col">
+      <h1 className="font-bold text-4xl text-gray-900 mb-2">Submit Your Claim</h1>
+      <p className="text-lg text-gray-600 font-medium">
+        Fill in the details below to submit your research claim
+      </p>
     </div>
   );
 };
@@ -128,7 +128,7 @@ const ClaimBox2 = () => {
     }
   };
 
-    const validateForm = () => {
+  const validateForm = () => {
     const newErrors = {};
     
     // Skip validation for fields that aren't shown based on category
@@ -168,9 +168,9 @@ const ClaimBox2 = () => {
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-    };
+  };
 
-    const handleSubmit = async () => {
+  const handleSubmit = async () => {
     if (!validateForm()) {
         alert("Please fill all required fields.");
         return;
@@ -240,7 +240,7 @@ const ClaimBox2 = () => {
         // Log FormData contents (add this right before the axios.post call)
         console.log("FormData contents:");
         for (let [key, value] of formData.entries()) {
-          console.log(`${key}: ${value instanceof File ? value.name : value}`);
+        console.log(`${key}: ${value instanceof File ? value.name : value}`);
         }
         const response = await axios.post(
         `${baseUrl}api/form/claim`,
@@ -262,345 +262,391 @@ const ClaimBox2 = () => {
     } finally {
         setIsLoading(false);
     }
-    };
+  };
 
-  const errorClass = "border-red-500";
+  const errorClass = "border-red-400 bg-red-50 focus:border-red-500 focus:ring-red-200";
+  const normalClass = "border-gray-200 bg-white focus:border-blue-500 focus:ring-blue-200";
 
   return (
-    <div className="claimBox  flex w-full h-full rounded-2xl p-5 flex-col items-center">
-      <h1 className="text-xl font-bold pb-10">Enter Details for Claim</h1>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      <div className="w-full max-w-4xl mx-auto px-6 py-8">
+        {/* <Heading /> */}
+        
+        <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 backdrop-blur-sm">
+          {/* Header Section */}
+          <div className="px-8 py-6 border-b border-gray-100 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-t-3xl">
+            <h2 className="text-2xl font-bold text-white">Claim Details</h2>
+            <p className="text-blue-100 mt-1">Please provide accurate information for your submission</p>
+          </div>
 
-      <div className="areaForDetails w-full bg-[#EDEFFD]  py-10 rounded-3xl px-10 max-w-[800px] flex flex-col shadow-2xl border-[1px] border-zinc-100">
-        <span className="mb-5">
-          <p>
-            Category of submission <span className="text-red-600">*</span>
-          </p>
-          <select
-            onChange={handleCategory}
-            defaultValue={"SCIE / WOS / ESCI,10000"}
-            className="w-full border h-12 rounded-sm max-w-[400px] px-6 flex items-center"
-            disabled={isLoading}
-          >
-            <option value={"SCIE / WOS / ESCI,10000"}>
-              SCIE / WOS / ESCI (10000)
-            </option>
-            <option value={"ESCI SCOPUS,5000"}>ESCI SCOPUS (5000)</option>
-            <option value={"Book Chapter international,5000"}>
-              Book Chapter International (5000)
-            </option>
-            <option value={"Book Chapter national,3000"}>
-              Book Chapter National (3000)
-            </option>
-            <option value={"UGC,3500"}>UGC (3500)</option>
-            <option value={"PUBLICATION,15000"}>Publication (15000)</option>
-            <option value={"Book International,10000"}>
-              Book International (10000)
-            </option>
-            <option value={"Book National,7500"}>Book National (7500)</option>
-            <option value={"Publication Patent,6000"}>
-              Publication Patent (6000) (1 or 2 PIET Faculty)
-            </option>
-            <option value={"Publication Patent,15000"}>
-              Publication Patent (15000) (More than 2 PIET Faculty)
-            </option>
-            <option value={"Conference,2000"}>Conference (2000)</option>
-            <option value={"Professional Body Membership,0"}>
-              Professional Body Membership
-            </option>
-          </select>
-        </span>
-
-        {/* Title field with conditional label */}
-        {(!isProfessionalBody) && (
-          <span className="mb-5">
-            <span className="pb-4">
-              {isConference ? "Title of the conference" : "Title of the research paper"}
-            </span>
-            <input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className={`w-full border h-8 rounded-sm border-transparent bg-zinc-100 px-6 py-6 ${
-                errors.title ? errorClass : ""
-              }`}
-              type="text"
-              placeholder={isConference ? "Conference Title" : "Paper Title"}
-              disabled={isLoading}
-            />
-          </span>
-        )}
-
-        {/* Authors section - only show for non-conference and non-professional body submissions */}
-        {!isConference && !isProfessionalBody && (
-          <>
-            <span className="mb-5">
-              <p>
-                Number of Authors <span className="text-red-600">*</span>
-              </p>
+          <div className="px-8 py-8 space-y-8">
+            {/* Category Selection */}
+            <div className="space-y-3">
+              <label className="flex items-center text-sm font-semibold text-gray-700">
+                <span className="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                Category of Submission
+                <span className="text-red-500 ml-1">*</span>
+              </label>
               <select
-                onChange={handleNumberAuthors}
-                value={authors}
-                className="w-full border h-12 rounded-sm max-w-[400px] px-6 flex items-center"
+                onChange={handleCategory}
+                defaultValue={"SCIE / WOS / ESCI,10000"}
+                className={`w-full px-4 py-4 rounded-xl border-2 transition-all duration-200 font-medium focus:outline-none focus:ring-4 ${normalClass} hover:border-blue-300`}
                 disabled={isLoading}
               >
-                {/* For Patent 1-2 faculty, restrict to 1-2 authors */}
-                {isPatent && incentive === 6000
-                  ? [1, 2].map((num) => (
-                      <option key={num} value={num}>
-                        {num}
-                      </option>
-                    ))
-                  : isPatent && incentive === 15000
-                  ? /* For Patent >2 faculty, minimum 3 authors */
-                    [3, 4, 5, 6, 7].map((num) => (
-                      <option key={num} value={num}>
-                        {num}
-                      </option>
-                    ))
-                  : /* For other submission types, 1-7 authors */
-                    [...Array(7)].map((_, index) => (
-                      <option key={index} value={index + 1}>
-                        {index + 1}
-                      </option>
-                    ))}
+                <option value={"SCIE / WOS / ESCI,10000"}>SCIE / WOS / ESCI (₹10,000)</option>
+                <option value={"ESCI SCOPUS,5000"}>ESCI SCOPUS (₹5,000)</option>
+                <option value={"Book Chapter international,5000"}>Book Chapter International (₹5,000)</option>
+                <option value={"Book Chapter national,3000"}>Book Chapter National (₹3,000)</option>
+                <option value={"UGC,3500"}>UGC (₹3,500)</option>
+                <option value={"PUBLICATION,15000"}>Publication (₹15,000)</option>
+                <option value={"Book International,10000"}>Book International (₹10,000)</option>
+                <option value={"Book National,7500"}>Book National (₹7,500)</option>
+                <option value={"Publication Patent,6000"}>Publication Patent (₹6,000) - 1 or 2 PIET Faculty</option>
+                <option value={"Publication Patent,15000"}>Publication Patent (₹15,000) - More than 2 PIET Faculty</option>
+                <option value={"Conference,2000"}>Conference (₹2,000)</option>
+                <option value={"Professional Body Membership,0"}>Professional Body Membership</option>
               </select>
-            </span>
-
-            <div className="w-full flex flex-wrap ml-5 mb-5">
-              {[...Array(authors)].map((_, index) => (
-                <span key={index} className="mb-2 mr-10">
-                  <p>
-                    Author {index + 1} <span className="text-red-600">*</span>
-                  </p>
-                  <div className="flex flex-row w-full gap-10">
-                    <input
-                      value={authorNames[index]}
-                      onChange={(e) => handleAuthorChange(index, e.target.value)}
-                      className={`w-full border h-8 rounded-sm border-transparent bg-zinc-100 px-6 py-6 ${
-                        errors[`author${index}`] ? errorClass : ""
-                      }`}
-                      type="text"
-                      placeholder="Author's Name"
-                      disabled={isLoading}
-                    />
-                    <input
-                      value={authorAffiliation[index]}
-                      onChange={(e) =>
-                        handleAuthorAffiliationChange(index, e.target.value)
-                      }
-                      className={`w-full border h-8 rounded-sm border-transparent bg-zinc-100 px-6 py-6 ${
-                        errors[`affiliation${index}`] ? errorClass : ""
-                      }`}
-                      type="text"
-                      placeholder="Author's Affiliation"
-                      disabled={isLoading}
-                    />
-                  </div>
-                </span>
-              ))}
             </div>
-          </>
-        )}
-    
-        {!isProfessionalBody && (
-        <span className="mb-5">
-            <p className="font-medium text-[14px]">
-            Proof of Claim<span className="text-red-600">*</span>
-            </p>
-            <label
-            htmlFor="claimProofUpload"
-            className={`cursor-pointer inline-flex items-center gap-2 px-5 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition ${
-                isLoading ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            >
-            Upload PDF
-            <input
-                id="claimProofUpload"
-                type="file"
-                accept="application/pdf"
-                onChange={handleProofChange}
-                className="hidden"
-                disabled={isLoading}
-            />
-            </label>
 
-            {claimProof && (
-            <p className="mt-2 text-green-600 font-medium">
-                Uploaded: {claimProof.name}
-            </p>
+            {/* Title Field */}
+            {(!isProfessionalBody) && (
+              <div className="space-y-3">
+                <label className="flex items-center text-sm font-semibold text-gray-700">
+                  <span className="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
+                  {isConference ? "Title of the Conference" : "Title of the Research Paper"}
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
+                <input
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className={`w-full px-4 py-4 rounded-xl border-2 transition-all duration-200 font-medium focus:outline-none focus:ring-4 ${
+                    errors.title ? errorClass : normalClass
+                  } hover:border-blue-300`}
+                  type="text"
+                  placeholder={isConference ? "Enter conference title..." : "Enter research paper title..."}
+                  disabled={isLoading}
+                />
+              </div>
             )}
-        </span>
-        )}
 
-        {/* Date field with conditional label */}
-        {!isProfessionalBody && (
-          <span className="mb-5">
-            <p>
-              {isConference ? "Date of Event" : "Date of Publication"}{" "}
-              <span className="text-red-600">*</span>
-            </p>
-            <input
-              value={publicationDate}
-              onChange={(e) => setPublicationDate(e.target.value)}
-              className={`w-full border h-8 rounded-sm border-transparent bg-zinc-200 px-6 py-6 ${
-                errors.publicationDate ? errorClass : ""
-              }`}
-              type="date"
-              disabled={isLoading}
-            />
-          </span>
-        )}
-
-        {/* Web link - only for non-conference and non-professional body submissions */}
-        {!isConference && !isProfessionalBody && (
-          <span className="mb-5">
-            <p>
-              Web link of research document <span className="text-red-600">*</span>
-            </p>
-            <input
-              value={webLink}
-              onChange={(e) => setWebLink(e.target.value)}
-              className={`w-full border h-8 rounded-sm border-transparent bg-zinc-200 px-6 py-6 ${
-                errors.webLink ? errorClass : ""
-              }`}
-              type="text"
-              placeholder="Link"
-              disabled={isLoading}
-            />
-          </span>
-        )}
-
-        {/* Venue field - only for non-professional body submissions */}
-        {!isProfessionalBody && (
-          <span className="mb-5">
-            <p>
-              Venue for {isConference ? "Conference" : "Paper"}{" "}
-              <span className="text-red-600">*</span>
-            </p>
-            <input
-              value={venue}
-              onChange={(e) => setVenue(e.target.value)}
-              className={`w-full border h-8 rounded-sm border-transparent bg-zinc-200 px-6 py-6 ${
-                errors.venue ? errorClass : ""
-              }`}
-              type="text"
-              placeholder="Venue"
-              disabled={isLoading}
-            />
-          </span>
-        )}
-
-        {/* Paper Front - only for non-conference and non-professional body submissions */}
-        {!isConference && !isProfessionalBody && (
-          <span className="mb-5">
-            <p className="font-medium text-[14px]">
-              Research Paper Front <span className="text-red-600">*</span>
-            </p>
-            <label
-              htmlFor="paperFrontUpload"
-              className={`cursor-pointer inline-flex items-center gap-2 px-5 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition ${
-                isLoading ? "opacity-50 cursor-not-allowed" : ""
-              }`}
-            >
-              Upload PDF
-              <input
-                id="paperFrontUpload"
-                type="file"
-                accept="application/pdf"
-                onChange={handleFileChange}
-                className="hidden"
-                disabled={isLoading}
-              />
-            </label>
-
-            {paperFront && (
-              <p className="mt-2 text-green-600 font-medium">
-                Uploaded: {paperFront.name}
-              </p>
-            )}
-          </span>
-        )}
-
-        {/* Proof of Claim - only for non-conference and non-professional body submissions */}
-        {!isConference && !isProfessionalBody && (
-          <span className="mb-5">
-            <p className="font-medium text-[14px]">
-              Proof of Claim<span className="text-red-600">*</span>
-            </p>
-            <label
-              htmlFor="claimProofUpload"
-              className={`cursor-pointer inline-flex items-center gap-2 px-5 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 transition ${
-                isLoading ? "opacity-50 cursor-not-allowed" : ""
-              }`}
-            >
-              Upload PDF
-              <input
-                id="claimProofUpload"
-                type="file"
-                accept="application/pdf"
-                onChange={handleProofChange}
-                className="hidden"
-                disabled={isLoading}
-              />
-            </label>
-
-            {claimProof && (
-              <p className="mt-2 text-green-600 font-medium">
-                Uploaded: {claimProof.name}
-              </p>
-            )}
-          </span>
-        )}
-
-        {/* Calculated amount - not shown for professional body */}
-        {!isProfessionalBody && (
-          <span className="mb-5">
-            <p className="font-medium">
-              Calculated Amount:{" "}
-              {isConference
-                ? incentive
-                : (incentive / authors).toFixed(0)}{" "}
-              Rs.
-            </p>
-          </span>
-        )}
-
-        <div className="w-full flex items-center justify-center">
-          <button
-            onClick={handleSubmit}
-            type="button"
-            className={`w-[200px] h-[40px] cursor-pointer flex items-center justify-center gap-2 px-5 py-2 bg-green-600 text-white font-medium rounded-md hover:bg-green-700 transition ${
-              isLoading ? "opacity-75 cursor-not-allowed" : ""
-            }`}
-            disabled={isLoading}
-          >
-            {isLoading ? (
+            {/* Authors Section */}
+            {!isConference && !isProfessionalBody && (
               <>
-                <svg
-                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-                Submitting...
+                <div className="space-y-3">
+                  <label className="flex items-center text-sm font-semibold text-gray-700">
+                    <span className="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
+                    Number of Authors
+                    <span className="text-red-500 ml-1">*</span>
+                  </label>
+                  <select
+                    onChange={handleNumberAuthors}
+                    value={authors}
+                    className={`w-full px-4 py-4 rounded-xl border-2 transition-all duration-200 font-medium focus:outline-none focus:ring-4 ${normalClass} hover:border-blue-300`}
+                    disabled={isLoading}
+                  >
+                    {/* For Patent 1-2 faculty, restrict to 1-2 authors */}
+                    {isPatent && incentive === 6000
+                      ? [1, 2].map((num) => (
+                          <option key={num} value={num}>
+                            {num} Author{num > 1 ? 's' : ''}
+                          </option>
+                        ))
+                      : isPatent && incentive === 15000
+                      ? /* For Patent >2 faculty, minimum 3 authors */
+                        [3, 4, 5, 6, 7].map((num) => (
+                          <option key={num} value={num}>
+                            {num} Authors
+                          </option>
+                        ))
+                      : /* For other submission types, 1-7 authors */
+                        [...Array(7)].map((_, index) => (
+                          <option key={index} value={index + 1}>
+                            {index + 1} Author{index > 0 ? 's' : ''}
+                          </option>
+                        ))}
+                  </select>
+                </div>
+
+                {/* Author Details */}
+                <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-2xl p-6 space-y-6">
+                  <h3 className="text-lg font-bold text-gray-800 flex items-center">
+                    <span className="w-3 h-3 bg-indigo-500 rounded-full mr-3"></span>
+                    Author Details
+                  </h3>
+                  <div className="grid gap-6">
+                    {[...Array(authors)].map((_, index) => (
+                      <div key={index} className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                        <h4 className="text-md font-semibold text-gray-700 mb-4">
+                          Author {index + 1}
+                        </h4>
+                        <div className="grid md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-medium text-gray-600 mb-2">
+                              Full Name <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                              value={authorNames[index]}
+                              onChange={(e) => handleAuthorChange(index, e.target.value)}
+                              className={`w-full px-4 py-3 rounded-lg border-2 transition-all duration-200 focus:outline-none focus:ring-4 ${
+                                errors[`author${index}`] ? errorClass : normalClass
+                              }`}
+                              type="text"
+                              placeholder="Enter author's full name"
+                              disabled={isLoading}
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-gray-600 mb-2">
+                              Affiliation <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                              value={authorAffiliation[index]}
+                              onChange={(e) => handleAuthorAffiliationChange(index, e.target.value)}
+                              className={`w-full px-4 py-3 rounded-lg border-2 transition-all duration-200 focus:outline-none focus:ring-4 ${
+                                errors[`affiliation${index}`] ? errorClass : normalClass
+                              }`}
+                              type="text"
+                              placeholder="Enter institution/organization"
+                              disabled={isLoading}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </>
-            ) : (
-              "Submit"
             )}
-          </button>
+
+            {/* Date Field */}
+            {!isProfessionalBody && (
+              <div className="space-y-3">
+                <label className="flex items-center text-sm font-semibold text-gray-700">
+                  <span className="w-2 h-2 bg-orange-500 rounded-full mr-3"></span>
+                  {isConference ? "Date of Event" : "Date of Publication"}
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
+                <input
+                  value={publicationDate}
+                  onChange={(e) => setPublicationDate(e.target.value)}
+                  className={`w-full px-4 py-4 rounded-xl border-2 transition-all duration-200 font-medium focus:outline-none focus:ring-4 ${
+                    errors.publicationDate ? errorClass : normalClass
+                  } hover:border-blue-300`}
+                  type="date"
+                  disabled={isLoading}
+                />
+              </div>
+            )}
+
+            {/* Web Link */}
+            {!isConference && !isProfessionalBody && (
+              <div className="space-y-3">
+                <label className="flex items-center text-sm font-semibold text-gray-700">
+                  <span className="w-2 h-2 bg-teal-500 rounded-full mr-3"></span>
+                  Web Link of Research Document
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
+                <input
+                  value={webLink}
+                  onChange={(e) => setWebLink(e.target.value)}
+                  className={`w-full px-4 py-4 rounded-xl border-2 transition-all duration-200 font-medium focus:outline-none focus:ring-4 ${
+                    errors.webLink ? errorClass : normalClass
+                  } hover:border-blue-300`}
+                  type="url"
+                  placeholder="https://example.com/your-research-paper"
+                  disabled={isLoading}
+                />
+              </div>
+            )}
+
+            {/* Venue Field */}
+            {!isProfessionalBody && (
+              <div className="space-y-3">
+                <label className="flex items-center text-sm font-semibold text-gray-700">
+                  <span className="w-2 h-2 bg-pink-500 rounded-full mr-3"></span>
+                  Venue for {isConference ? "Conference" : "Paper"}
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
+                <input
+                  value={venue}
+                  onChange={(e) => setVenue(e.target.value)}
+                  className={`w-full px-4 py-4 rounded-xl border-2 transition-all duration-200 font-medium focus:outline-none focus:ring-4 ${
+                    errors.venue ? errorClass : normalClass
+                  } hover:border-blue-300`}
+                  type="text"
+                  placeholder="Enter venue name or journal name"
+                  disabled={isLoading}
+                />
+              </div>
+            )}
+
+            {/* File Upload Sections */}
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* Paper Front - only for non-conference and non-professional body submissions */}
+              {!isConference && !isProfessionalBody && (
+                <div className="space-y-3">
+                  <label className="flex items-center text-sm font-semibold text-gray-700">
+                    <span className="w-2 h-2 bg-yellow-500 rounded-full mr-3"></span>
+                    Research Paper Front
+                    <span className="text-red-500 ml-1">*</span>
+                  </label>
+                  <div className={`relative border-2 border-dashed rounded-xl p-6 transition-all duration-200 hover:border-blue-400 ${
+                    errors.paperFront ? 'border-red-300 bg-red-50' : 'border-gray-300 bg-gray-50'
+                  }`}>
+                    <label
+                      htmlFor="paperFrontUpload"
+                      className={`cursor-pointer flex flex-col items-center space-y-3 ${
+                        isLoading ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
+                    >
+                      <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                        <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-sm font-medium text-gray-700">Upload PDF</p>
+                        <p className="text-xs text-gray-500">Research paper front page</p>
+                      </div>
+                      <input
+                        id="paperFrontUpload"
+                        type="file"
+                        accept="application/pdf"
+                        onChange={handleFileChange}
+                        className="hidden"
+                        disabled={isLoading}
+                      />
+                    </label>
+                    {paperFront && (
+                      <div className="mt-3 p-3 bg-green-50 rounded-lg">
+                        <p className="text-sm text-green-700 font-medium flex items-center">
+                          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                          {paperFront.name}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Proof of Claim */}
+              {!isProfessionalBody && (
+                <div className="space-y-3">
+                  <label className="flex items-center text-sm font-semibold text-gray-700">
+                    <span className="w-2 h-2 bg-red-500 rounded-full mr-3"></span>
+                    Proof of Claim
+                    <span className="text-red-500 ml-1">*</span>
+                  </label>
+                  <div className={`relative border-2 border-dashed rounded-xl p-6 transition-all duration-200 hover:border-blue-400 ${
+                    errors.claimProof ? 'border-red-300 bg-red-50' : 'border-gray-300 bg-gray-50'
+                  }`}>
+                    <label
+                      htmlFor="claimProofUpload"
+                      className={`cursor-pointer flex flex-col items-center space-y-3 ${
+                        isLoading ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
+                    >
+                      <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-sm font-medium text-gray-700">Upload PDF</p>
+                        <p className="text-xs text-gray-500">Supporting documents</p>
+                      </div>
+                      <input
+                        id="claimProofUpload"
+                        type="file"
+                        accept="application/pdf"
+                        onChange={handleProofChange}
+                        className="hidden"
+                        disabled={isLoading}
+                      />
+                    </label>
+                    {claimProof && (
+                      <div className="mt-3 p-3 bg-green-50 rounded-lg">
+                        <p className="text-sm text-green-700 font-medium flex items-center">
+                          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                          {claimProof.name}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Calculated Amount */}
+            {!isProfessionalBody && (
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200">
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                    <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-green-800">Calculated Amount</h3>
+                    <p className="text-2xl font-bold text-green-600">
+                      ₹{isConference ? incentive.toLocaleString() : (incentive / authors).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Submit Button */}
+            <div className="pt-6">
+              <button
+                onClick={handleSubmit}
+                type="button"
+                className={`w-full py-4 px-8 rounded-2xl font-bold text-lg transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-4 focus:ring-blue-200 ${
+                  isLoading 
+                    ? "bg-gray-400 cursor-not-allowed text-white" 
+                    : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl"
+                }`}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <div className="flex items-center justify-center space-x-3">
+                    <svg
+                      className="animate-spin w-6 h-6 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                    <span>Submitting your claim...</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center space-x-3">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>Submit Claim</span>
+                  </div>
+                )}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -609,11 +655,11 @@ const ClaimBox2 = () => {
 
 const Claim = () => {
   return (
-    <div className="claim h-full w-full flex pr-5 pb-10 ">
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-white to-blue-50 flex">
       <SideBar />
-      <div className="content flex flex-col w-full">
+      <div className="flex-1 flex flex-col">
         <Navbar />
-        <div className="areaContentClaim flex w-full h-full py-[20px] px-[20px] min-h-[calc(100vh-120px)] rounded-2xl mt-5 shadow-2xs flex-col">
+        <div className="flex-1 overflow-auto">
           <ClaimBox2 />
         </div>
       </div>
