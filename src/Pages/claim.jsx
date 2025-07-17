@@ -19,8 +19,8 @@ const Heading = () => {
 const ClaimBox2 = () => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [authors, setAuthors] = React.useState(1);
-  const [authorNames, setAuthorNames] = React.useState(Array(7).fill(""));
-  const [authorAffiliation, setAffiliation] = React.useState(Array(7).fill(""));
+  const [authorNames, setAuthorNames] = React.useState(Array(9).fill(""));
+  const [authorAffiliation, setAffiliation] = React.useState(Array(9).fill(""));
   const [category, setCategory] = React.useState("SCIE / WOS / ESCI");
   const [categoryValue, setCategoryValue] = React.useState("SCIE / WOS / ESCI");
   const [incentive, setIncentive] = React.useState(10000);
@@ -40,8 +40,8 @@ const ClaimBox2 = () => {
   // Helper function to clear form
   function clear() {
     setAuthors(1);
-    setAuthorNames(Array(7).fill(""));
-    setAffiliation(Array(7).fill(""));
+    setAuthorNames(Array(9).fill(""));
+    setAffiliation(Array(9).fill(""));
     setCategory("SCIE / WOS / ESCI");
     setCategoryValue("SCIE / WOS / ESCI");
     setIncentive(10000);
@@ -93,6 +93,12 @@ const ClaimBox2 = () => {
       // For Patent with >2 faculty
       if (newAuthorCount < 3) {
         alert("For Publication Patent with more than 2 faculty, minimum of 3 authors is required.");
+        return;
+      }
+    } else if (category === "Conference") {
+      // For Conference, maximum 9 authors
+      if (newAuthorCount > 9) {
+        alert("For Conference submissions, maximum of 9 authors is allowed.");
         return;
       }
     }
@@ -151,6 +157,21 @@ const ClaimBox2 = () => {
         if (!claimProof || !(claimProof instanceof File)) newErrors.claimProof = true;
     }
 
+    if (!isProfessionalBody) {
+    authorNames.slice(0, authors).forEach((name, index) => {
+      if (!name.trim()) {
+        newErrors[`author${index}`] = true;
+      }
+    });
+
+    authorAffiliation.slice(0, authors).forEach((aff, index) => {
+      if (!aff.trim()) {
+        newErrors[`affiliation${index}`] = true;
+      }
+    });
+  }
+
+
     // Validate authors only if they should be displayed
     if (!isConference && !isProfessionalBody) {
         authorNames.slice(0, authors).forEach((name, index) => {
@@ -198,42 +219,40 @@ const ClaimBox2 = () => {
     
     // Add claim proof for both conference and regular submissions (not for professional body)
     if (!isProfessionalBody) {
-        formData.append("claimProof", claimProof);
+      formData.append("claimProof", claimProof);
     }
     
     // Fields only for non-conference, non-professional body submissions
-    if (!isConference && !isProfessionalBody) {
-        formData.append("numberOfAuthors", authors);
+    if (!isProfessionalBody) {
+      formData.append("numberOfAuthors", authors);
+      
+      // Append author data for both regular and conference submissions
+      authorNames.slice(0, authors).forEach((name, index) => {
+        formData.append(`authors[${index}]`, name);
+      });
+
+      authorAffiliation.slice(0, authors).forEach((affiliation, index) => {
+        formData.append(`authorAffiliation[${index}]`, affiliation);
+      });
+      
+      if (isConference) {
+        formData.append("calculatedAmount", (incentive / authors).toFixed(0));
+        formData.append("webLink", "NA");
+      } else {
         formData.append("webLink", webLink);
         formData.append("calculatedAmount", (incentive / authors).toFixed(0));
-        
-        // Append author data
-        authorNames.slice(0, authors).forEach((name, index) => {
-        formData.append(`authors[${index}]`, name);
-        });
-
-        authorAffiliation.slice(0, authors).forEach((affiliation, index) => {
-        formData.append(`authorAffiliation[${index}]`, affiliation);
-        });
-        
         formData.append("paperFront", paperFront);
-    } else if (isConference) {
-        // For conference, send a placeholder for authors
-        formData.append("numberOfAuthors", 1);
-        formData.append("authors[0]", "NA");
-        formData.append("authorAffiliation[0]", "NA");
-        formData.append("calculatedAmount", incentive);
-        formData.append("webLink", "NA");
+      }
     } else if (isProfessionalBody) {
-        // For professional body, send minimal data
-        formData.append("title", "Professional Body Membership");
-        formData.append("numberOfAuthors", 1);
-        formData.append("authors[0]", "NA");
-        formData.append("authorAffiliation[0]", "NA");
-        formData.append("calculatedAmount", incentive);
-        formData.append("webLink", "NA");
-        formData.append("publicationDate", "2000-01-01");
-        formData.append("venue", "NA");
+      // Professional body remains the same
+      formData.append("title", "Professional Body Membership");
+      formData.append("numberOfAuthors", 1);
+      formData.append("authors[0]", "NA");
+      formData.append("authorAffiliation[0]", "NA");
+      formData.append("calculatedAmount", incentive);
+      formData.append("webLink", "NA");
+      formData.append("publicationDate", "2000-01-01");
+      formData.append("venue", "NA");
     }
 
     try {
@@ -330,7 +349,7 @@ const ClaimBox2 = () => {
             )}
 
             {/* Authors Section */}
-            {!isConference && !isProfessionalBody && (
+            {!isProfessionalBody && (
               <>
                 <div className="space-y-3">
                   <label className="flex items-center text-sm font-semibold text-gray-700">
@@ -353,13 +372,20 @@ const ClaimBox2 = () => {
                         ))
                       : isPatent && incentive === 15000
                       ? /* For Patent >2 faculty, minimum 3 authors */
-                        [3, 4, 5, 6, 7].map((num) => (
+                        [3, 4, 5, 6, 7, 8, 9].map((num) => (
                           <option key={num} value={num}>
                             {num} Authors
                           </option>
                         ))
-                      : /* For other submission types, 1-7 authors */
-                        [...Array(7)].map((_, index) => (
+                      : isConference
+                      ? /* For Conference, 1-9 authors */
+                        [...Array(9)].map((_, index) => (
+                          <option key={index} value={index + 1}>
+                            {index + 1} Author{index > 0 ? 's' : ''}
+                          </option>
+                        ))
+                      : /* For other submission types, 1-9 authors */
+                        [...Array(9)].map((_, index) => (
                           <option key={index} value={index + 1}>
                             {index + 1} Author{index > 0 ? 's' : ''}
                           </option>
@@ -367,7 +393,7 @@ const ClaimBox2 = () => {
                   </select>
                 </div>
 
-                {/* Author Details */}
+                {/* Author Details - now shows for conferences too */}
                 <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-2xl p-6 space-y-6">
                   <h3 className="text-lg font-bold text-gray-800 flex items-center">
                     <span className="w-3 h-3 bg-indigo-500 rounded-full mr-3"></span>
@@ -422,8 +448,8 @@ const ClaimBox2 = () => {
             {!isProfessionalBody && (
               <div className="space-y-3">
                 <label className="flex items-center text-sm font-semibold text-gray-700">
-                  <span className="w-2 h-2 bg-orange-500 rounded-full mr-3"></span>
-                  {isConference ? "Date of Event" : "Date of Publication"}
+                  <span className="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
+                  Date of the event
                   <span className="text-red-500 ml-1">*</span>
                 </label>
                 <input
@@ -593,7 +619,7 @@ const ClaimBox2 = () => {
                   <div>
                     <h3 className="text-lg font-bold text-green-800">Calculated Amount</h3>
                     <p className="text-2xl font-bold text-green-600">
-                      ₹{isConference ? incentive.toLocaleString() : (incentive / authors).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                      ₹{(incentive / authors).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                     </p>
                   </div>
                 </div>
