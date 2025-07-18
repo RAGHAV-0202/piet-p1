@@ -54,7 +54,7 @@ function Error() {
                 transition={{ delay: 1.2, duration: 0.6 }}
                 className="absolute bottom-4 text-sm text-gray-100 hidden sm:block"
             >
-                Developed with 💙 by <span className="text-white">Raghav</span>
+                Developed by <span className="text-white">Raghav</span>
             </motion.p>
 
             {/* Floating Effects */}
