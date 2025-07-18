@@ -100,59 +100,50 @@ const Claim = ({
       <p className="text-sm text-gray-600">📅 Submitted at: {new Date(createdAt).toLocaleString()}</p>
       <p className="text-sm text-gray-600">🟢 Status: {status}</p>
 
-      {webLink && (
+      {webLink && webLink != "NA" && (
         <a href={webLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline text-sm">
           🔗 View Paper
         </a>
       )}
 
-      <div className="flex flex-col mt-4">
-        <div className="mb-4">
-          <p className="text-sm font-semibold mb-2">📄 Paper Front:</p>
-          <div className="flex flex-col sm:flex-row gap-2 items-start">
-            <div className="flex flex-col gap-2">
-              <a 
-                href={paperFront} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="px-3 py-1 bg-blue-500 text-white rounded-md text-sm flex items-center justify-center hover:bg-blue-600 transition w-30"
-              >
-                👁️ View
-              </a>
-              {/* <a 
-                href={paperFront} 
-                download={`paper-front-${getFilenameFromUrl(paperFront)}.pdf`}
-                className="px-3 py-1 bg-green-500 text-white rounded-md text-sm flex items-center justify-center hover:bg-green-600 transition w-30"
-              >
-                ⬇️ Download
-              </a> */}
+      { (claimProof || paperFront) && 
+      <div className="flex flex-row gap-4 mt-4">
+        {paperFront && paperFront != "NA" && 
+          <div className="mb-4">
+            <p className="text-sm font-semibold mb-2">📄 Paper Front:</p>
+            <div className="flex flex-col sm:flex-row gap-2 items-start">
+              <div className="flex flex-col gap-2">
+                <a 
+                  href={paperFront} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="px-3 py-1 bg-blue-500 text-white rounded-md text-sm flex items-center justify-center hover:bg-blue-600 transition w-30"
+                >
+                  👁️ View
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div>
-          <p className="text-sm font-semibold mb-2">📑 Claim Proof:</p>
-          <div className="flex flex-col sm:flex-row gap-2 items-start">
-            <div className="flex flex-col gap-2">
-              <a 
-                href={claimProof}
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="px-3 py-1 bg-blue-500 text-white rounded-md text-sm flex items-center justify-center hover:bg-blue-600 transition w-30"
-              >
-                👁️ View
-              </a>
-              {/* <a 
-                href={claimProof} 
-                download={`claim-proof-${getFilenameFromUrl(claimProof)}.pdf`}
-                className="px-3 py-1 bg-green-500 text-white rounded-md text-sm flex items-center justify-center hover:bg-green-600 transition w-30"
-              >
-                ⬇️ Download
-              </a> */}
+        }
+        { claimProof && 
+          <div>
+            <p className="text-sm font-semibold mb-2">📑 Claim Proof:</p>
+            <div className="flex flex-col sm:flex-row gap-2 items-start">
+              <div className="flex flex-col gap-2">
+                <a 
+                  href={claimProof}
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="px-3 py-1 bg-blue-500 text-white rounded-md text-sm flex items-center justify-center hover:bg-blue-600 transition w-30"
+                >
+                  👁️ View
+                </a>
+              </div>
             </div>
           </div>
+        }
         </div>
-      </div>
+      }
       
       {/* Action Buttons */}
       <div className="mt-4 flex flex-row gap-3">
@@ -350,8 +341,8 @@ const AdminSubmissions = () => {
     <div className="h-auto min-h-[100vh] w-full flex flex-row pr-5">
       <AdminSideBar />
       <div className="content w-full h-full flex flex-col">
-        {/* <AdminNavbar /> */}
-        <div className="areaContent bg-[#EDEFFD] flex w-full py-10 px-10 min-h-[calc(100vh)] h-auto rounded-2xl mt-5 shadow-lg flex-col">
+        <AdminNavbar />
+        <div className="areaContent bg-[#EDEFFD] flex w-full py-10 px-10 min-h-[calc(100vh-120px)] h-auto rounded-2xl mt-5 shadow-lg flex-col">
           <h2 className="font-bold text-2xl mb-4">Admin Panel - All Submissions</h2>
 
           <div className="w-full h-auto py-4 bg-white mb-3 flex flex-row items-center px-[20px] rounded-xl gap-[20px] flex-wrap">
