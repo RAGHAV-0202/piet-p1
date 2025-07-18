@@ -107,7 +107,7 @@ const Claim = ({
       )}
 
       { (claimProof || paperFront) && 
-      <div className="flex flex-row gap-4 mt-4">
+      <div className="flex flex-col gap-4 mt-4">
         {paperFront && paperFront != "NA" && 
           <div className="mb-4">
             <p className="text-sm font-semibold mb-2">📄 Paper Front:</p>
