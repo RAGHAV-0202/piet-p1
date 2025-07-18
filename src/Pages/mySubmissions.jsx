@@ -24,7 +24,8 @@ const UserWelcome = ({ name, isLoading }) => {
   );
 };
 
-const Claim = ({ title, authors, publicationDate, venue, webLink, category, calculatedAmount }) => {
+const Claim = ({ title, authors, publicationDate, venue, webLink, category, calculatedAmount , claimProof , paperFront}) => {
+  console.log(claimProof)
   return (
     <div className="w-full bg-white p-5 rounded-xl shadow-md flex flex-col gap-2 border-l-4 border-blue-500">
       <h3 className="text-xl font-bold text-gray-800">{title || "Untitled Paper"}</h3>
@@ -33,7 +34,7 @@ const Claim = ({ title, authors, publicationDate, venue, webLink, category, calc
       <p className="text-sm text-gray-600">👨‍🎓 Authors: {authors.length ? authors.join(", ") : "NA"}</p>
       <p className="text-sm text-gray-600">📂 Category: {category}</p>
       <p className="text-sm text-gray-600">💰 Incentive: ₹{calculatedAmount}</p>
-      {webLink && (
+      {/* {webLink && (
         <a
           href={webLink}
           target="_blank"
@@ -42,7 +43,46 @@ const Claim = ({ title, authors, publicationDate, venue, webLink, category, calc
         >
           🔗 View Paper
         </a>
-      )}
+      )} */}
+
+      { (claimProof || paperFront) && 
+      <div className="flex flex-row gap-4 mt-4">
+        {paperFront && paperFront != "NA" && 
+          <div className="mb-4">
+            <p className="text-sm font-semibold mb-2">📄 Paper Front:</p>
+            <div className="flex flex-col sm:flex-row gap-2 items-start">
+              <div className="flex flex-col gap-2">
+                <a 
+                  href={paperFront} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="px-3 py-1 bg-blue-500 text-white rounded-md text-sm flex items-center justify-center hover:bg-blue-600 transition w-30"
+                >
+                  👁️ View
+                </a>
+              </div>
+            </div>
+          </div>
+        }
+        { claimProof && 
+          <div>
+            <p className="text-sm font-semibold mb-2">📑 Claim Proof:</p>
+            <div className="flex flex-col sm:flex-row gap-2 items-start">
+              <div className="flex flex-col gap-2">
+                <a 
+                  href={claimProof}
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="px-3 py-1 bg-blue-500 text-white rounded-md text-sm flex items-center justify-center hover:bg-blue-600 transition w-30"
+                >
+                  👁️ View
+                </a>
+              </div>
+            </div>
+          </div>
+        }
+        </div>
+      }
     </div>
   );
 };
@@ -80,7 +120,7 @@ const Submissions = () => {
     const fetchSubmissions = async () => {
       try {
         const response = await axios.get(`${baseUrl}api/form/myClaims`, { withCredentials: true });
-        console.log("API Response:", response.data.data);
+        // console.log("API Response:", response.data.data);
 
         if (Array.isArray(response.data.data)) {
           setSubmissions(response.data.data);
@@ -97,6 +137,8 @@ const Submissions = () => {
 
     Promise.all([getUser(), fetchSubmissions()]);
   }, []);
+
+  console.log(submissions)
 
   return (
     <div className="h-auto min-h-[100vh] w-full flex flex-row pr-5">
