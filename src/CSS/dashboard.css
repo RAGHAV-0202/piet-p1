@@ -13,8 +13,10 @@
     .dashboard_areaContent {
         /* background-color: yellowgreen; */
         padding: 10px !important;
+        padding-top: 0 !important;
+        margin-top:  0 !important;
         /* Make sure this doesn't have extra margin creating gaps */
-        margin-top: 5px;
+        /* margin-top: 5px; */
     }
 
     .userWlcm {
