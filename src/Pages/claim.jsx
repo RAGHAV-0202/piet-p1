@@ -31,6 +31,10 @@ const ClaimBox2 = () => {
   const [paperFront, setPaperFront] = React.useState(null);
   const [claimProof, setClaimProof] = React.useState(null);
   const [errors, setErrors] = React.useState({});
+  const [pietFacultyCount, setPietFacultyCount] = React.useState(1);
+  const [showPietFacultySelection, setShowPietFacultySelection] = React.useState(false);
+  const [totalAuthors, setTotalAuthors] = React.useState(1);
+  const [pietFacultyNames, setPietFacultyNames] = React.useState(['', '']); 
 
   // Determine if this is a Patent submission with faculty restriction
   const isPatent = category === "Publication Patent";
@@ -42,6 +46,7 @@ const ClaimBox2 = () => {
     setAuthors(1);
     setAuthorNames(Array(9).fill(""));
     setAffiliation(Array(9).fill(""));
+    setPietFacultyNames(['', '']); // Clear PIET faculty names
     setCategory("SCIE / WOS / ESCI");
     setCategoryValue("SCIE / WOS / ESCI");
     setIncentive(10000);
@@ -65,46 +70,66 @@ const ClaimBox2 = () => {
     setCategory(newCategory);
     setIncentive(newIncentive);
 
-    // Reset authors based on category rules
+    // Show PIET faculty selection for 6000 patent option
     if (newCategory === "Publication Patent" && newIncentive === 6000) {
-      // For 1-2 faculty patent submission, default to 1 author
+      setShowPietFacultySelection(true);
       setAuthors(1);
-    } else if (newCategory === "Publication Patent" && newIncentive === 15000) {
-      // For >2 faculty patent submission, default to 3 authors
-      setAuthors(3);
-    } else if (newCategory === "Conference" || newCategory === "Professional Body Membership") {
-      // For Conference or Professional Body, no authors needed
-      setAuthors(1);
+      setPietFacultyCount(1); // Reset to default
+    } else {
+      setShowPietFacultySelection(false);
+      if (newCategory === "Publication Patent" && newIncentive === 15000) {
+        setAuthors(3);
+      } else if (newCategory === "Conference" || newCategory === "Professional Body Membership") {
+        setAuthors(1);
+      }
     }
+  };
+
+  const handlePietFacultyChange = (e) => {
+    const facultyCount = parseInt(e.target.value);
+    setPietFacultyCount(facultyCount);
+    
+    // Set minimum authors based on PIET faculty count
+    if (facultyCount === 1) {
+      setAuthors(Math.max(1, authors)); // Ensure at least 1 author
+    } else if (facultyCount === 2) {
+      setAuthors(Math.max(2, authors)); // Ensure at least 2 authors
+    }
+  };
+
+  const handlePietFacultyNameChange = (index, value) => {
+    const updatedNames = [...pietFacultyNames];
+    updatedNames[index] = value;
+    setPietFacultyNames(updatedNames);
   };
 
   // Handle author count changes with validation for patent submissions
-  const handleNumberAuthors = (e) => {
-    const newAuthorCount = parseInt(e.target.value);
-    
-    // Enforce patent-specific author restrictions
-    if (category === "Publication Patent" && incentive === 6000) {
-      // For Patent with 1-2 faculty
-      if (newAuthorCount > 2) {
-        alert("For Publication Patent with 1-2 faculty, maximum of 2 authors is allowed.");
-        return;
-      }
-    } else if (category === "Publication Patent" && incentive === 15000) {
-      // For Patent with >2 faculty
-      if (newAuthorCount < 3) {
-        alert("For Publication Patent with more than 2 faculty, minimum of 3 authors is required.");
-        return;
-      }
-    } else if (category === "Conference") {
-      // For Conference, maximum 9 authors
-      if (newAuthorCount > 9) {
-        alert("For Conference submissions, maximum of 9 authors is allowed.");
-        return;
-      }
+const handleNumberAuthors = (e) => {
+  const newAuthorCount = parseInt(e.target.value);
+  
+  // Enforce patent-specific author restrictions
+  if (category === "Publication Patent" && incentive === 6000) {
+    // For Patent with PIET faculty, check minimum requirements
+    if (newAuthorCount < pietFacultyCount) {
+      alert(`For Publication Patent with ${pietFacultyCount} PIET faculty, minimum of ${pietFacultyCount} authors is required.`);
+      return;
     }
+  } else if (category === "Publication Patent" && incentive === 15000) {
+    // For Patent with >2 faculty
+    if (newAuthorCount < 3) {
+      alert("For Publication Patent with more than 2 faculty, minimum of 3 authors is required.");
+      return;
+    }
+  } else if (category === "Conference") {
+    // For Conference, maximum 9 authors
+    if (newAuthorCount > 9) {
+      alert("For Conference submissions, maximum of 9 authors is allowed.");
+      return;
+    }
+  }
 
-    setAuthors(newAuthorCount);
-  };
+  setAuthors(newAuthorCount);
+};
 
   const handleAuthorAffiliationChange = (index, value) => {
     const updatedAffiliation = [...authorAffiliation];
@@ -365,7 +390,7 @@ const ClaimBox2 = () => {
                   >
                     {/* For Patent 1-2 faculty, restrict to 1-2 authors */}
                     {isPatent && incentive === 6000
-                      ? [1, 2].map((num) => (
+                      ? [1, 2,3, 4, 5, 6, 7, 8, 9].map((num) => (
                           <option key={num} value={num}>
                             {num} Author{num > 1 ? 's' : ''}
                           </option>
@@ -392,6 +417,61 @@ const ClaimBox2 = () => {
                         ))}
                   </select>
                 </div>
+
+              {showPietFacultySelection && (
+                <div className="space-y-6">
+                  {/* PIET Faculty Count Selection */}
+                  <div className="space-y-3">
+                    <label className="flex items-center text-sm font-semibold text-gray-700">
+                      <span className="w-2 h-2 bg-orange-500 rounded-full mr-3"></span>
+                      Number of PIET Faculty
+                      <span className="text-red-500 ml-1">*</span>
+                    </label>
+                    <select
+                      onChange={handlePietFacultyChange}
+                      value={pietFacultyCount}
+                      className={`w-full px-4 py-4 rounded-xl border-2 transition-all duration-200 font-medium focus:outline-none focus:ring-4 ${normalClass} hover:border-blue-300`}
+                      disabled={isLoading}
+                    >
+                      <option value={1}>1 PIET Faculty</option>
+                      <option value={2}>2 PIET Faculty</option>
+                    </select>
+                  </div>
+
+                  {/* PIET Faculty Names */}
+                  <div className="bg-gradient-to-r from-orange-50 to-yellow-50 rounded-2xl p-6 space-y-4">
+                    <h3 className="text-lg font-bold text-gray-800 flex items-center">
+                      <span className="w-3 h-3 bg-orange-500 rounded-full mr-3"></span>
+                      PIET Faculty Details
+                    </h3>
+                    <div className="space-y-4">
+                      {[...Array(pietFacultyCount)].map((_, index) => (
+                        <div key={index} className="bg-white rounded-xl p-4 shadow-sm border border-orange-100">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            PIET Faculty {index + 1} Name <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            value={pietFacultyNames[index]}
+                            onChange={(e) => handlePietFacultyNameChange(index, e.target.value)}
+                            className={`w-full px-4 py-3 rounded-lg border-2 transition-all duration-200 focus:outline-none focus:ring-4 ${
+                              errors[`pietFaculty${index}`] ? errorClass : normalClass
+                            }`}
+                            type="text"
+                            placeholder="Enter PIET faculty name"
+                            disabled={isLoading}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Information Note */}
+                  <div className="text-sm text-gray-600 bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <p><strong>Note:</strong> You can add outsiders as additional authors. Total amount (₹6,000) will be divided equally among all {authors} authors.</p>
+                    <p className="mt-2"><strong>Requirement:</strong> Total authors ({authors}) must be at least equal to PIET faculty count ({pietFacultyCount}).</p>
+                  </div>
+                </div>
+              )}
 
                 {/* Author Details - now shows for conferences too */}
                 <div className="bg-gradient-to-r from-gray-50 to-blue-50 rounded-2xl p-6 space-y-6">
@@ -621,10 +701,17 @@ const ClaimBox2 = () => {
                     <p className="text-2xl font-bold text-green-600">
                       ₹{(incentive / authors).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                     </p>
+                    {/* Show breakdown for 6000 patent */}
+                    {category === "Publication Patent" && incentive === 6000 && (
+                      <p className="text-sm text-green-700 mt-1">
+                        Total: ₹{incentive.toLocaleString()} ÷ {authors} authors
+                      </p>
+                    )}
                   </div>
                 </div>
               </div>
             )}
+
 
             {/* Submit Button */}
             <div className="pt-6">
