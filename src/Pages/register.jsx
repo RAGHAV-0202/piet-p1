@@ -326,7 +326,8 @@ export default function Register() {
                       <option value="CSE">CSE</option>
                       <option value="AIML">AIML</option>
                       <option value="AIDS">AIDS</option>
-                      <option value="CYS">CYS</option>
+                      <option value="ASH">ASH</option>
+                      <option value="CYS">Cyber Security</option>
                       <option value="IT">IT</option>
                       <option value="ME">ME</option>
                       <option value="TEXTILE">TEXTILE</option>
@@ -499,4 +500,3 @@ export default function Register() {
     </div>
   )
 }
-
