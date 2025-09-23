@@ -342,7 +342,7 @@ const handleNumberAuthors = (e) => {
                 <option value={"Book Chapter international,5000"}>Book Chapter International (₹5,000)</option>
                 <option value={"Book Chapter national,3000"}>Book Chapter National (₹3,000)</option>
                 <option value={"UGC,3500"}>UGC (₹3,500)</option>
-                <option value={"PUBLICATION,15000"}>Publication (₹15,000)</option>
+                {/* <option value={"PUBLICATION,15000"}>Publication (₹15,000)</option> */}
                 <option value={"Book International,10000"}>Book International (₹10,000)</option>
                 <option value={"Book National,7500"}>Book National (₹7,500)</option>
                 <option value={"Publication Patent,6000"}>Publication Patent (₹6,000) - 1 or 2 PIET Faculty</option>
@@ -781,3 +781,4 @@ const Claim = () => {
 };
 
 export default Claim;
+
