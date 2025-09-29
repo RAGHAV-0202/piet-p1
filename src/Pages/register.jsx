@@ -334,6 +334,9 @@ export default function Register() {
                       <option value="CIVIL">CIVIL</option>
                       <option value="PHARMACY">PHARMACY</option>
                       <option value="DCA">DCA</option>
+                      <option value="DCA">ECE</option>
+                      <option value="DCA">BBA</option>
+                      <option value="DCA">MBA</option>
                     </select>
                     {showError("department")}
                   </span>
@@ -500,3 +503,4 @@ export default function Register() {
     </div>
   )
 }
+
