@@ -6,6 +6,7 @@ import AdminSideBar from "../Components/adminSidebar.jsx";
 import AdminNavbar from "../Components/adminNavbar.jsx";
 // Import xlsx library for Excel export
 import * as XLSX from 'xlsx';
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Claim = ({ 
   title, 
@@ -197,6 +198,8 @@ const AdminSubmissions = () => {
     status: "ALL"
   });
 
+  const Navigate = useNavigate();
+
   useEffect(() => {
     const fetchSubmissions = async () => {
       try {
@@ -212,6 +215,7 @@ const AdminSubmissions = () => {
       } catch (err) {
         console.error("Error fetching submissions:", err);
         setError("Failed to fetch submissions. Please try again.");
+        Navigate("/admin/login")
       } finally {
         setLoading(false);
       }

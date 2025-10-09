@@ -24,65 +24,108 @@ const UserWelcome = ({ name, isLoading }) => {
   );
 };
 
-const Claim = ({ title, authors, publicationDate, venue, webLink, category, calculatedAmount , claimProof , paperFront}) => {
-  console.log(claimProof)
+const Claim = ({ _id, title, authors, publicationDate, venue, webLink, category, calculatedAmount, claimProof, paperFront, onDelete }) => {
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await axios.post(`${baseUrl}api/form/claim/${_id}`, {}, { withCredentials: true });
+      onDelete(_id);
+      setShowConfirm(false);
+    } catch (err) {
+      console.error("Error deleting claim:", err);
+      alert("Failed to delete claim. Please try again.");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
-    <div className="w-full bg-white p-5 rounded-xl shadow-md flex flex-col gap-2 border-l-4 border-blue-500">
+    <div className="w-full bg-white p-5 rounded-xl shadow-md flex flex-col gap-2 border-l-4 border-blue-500 relative">
       <h3 className="text-xl font-bold text-gray-800">{title || "Untitled Paper"}</h3>
       <p className="text-sm text-gray-600">📅 Published on: {publicationDate || "N/A"}</p>
       <p className="text-sm text-gray-600">🏛 Venue: {venue || "N/A"}</p>
       <p className="text-sm text-gray-600">👨‍🎓 Authors: {authors.length ? authors.join(", ") : "NA"}</p>
       <p className="text-sm text-gray-600">📂 Category: {category}</p>
       <p className="text-sm text-gray-600">💰 Incentive: ₹{calculatedAmount}</p>
-      {/* {webLink && (
-        <a
-          href={webLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-600 underline text-sm"
-        >
-          🔗 View Paper
-        </a>
-      )} */}
 
-      { (claimProof || paperFront) && 
-      <div className="flex flex-row gap-4 mt-4">
-        {paperFront && paperFront != "NA" && 
-          <div className="mb-4">
-            <p className="text-sm font-semibold mb-2">📄 Paper Front:</p>
-            <div className="flex flex-col sm:flex-row gap-2 items-start">
-              <div className="flex flex-col gap-2">
-                <a 
-                  href={paperFront} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="px-3 py-1 bg-blue-500 text-white rounded-md text-sm flex items-center justify-center hover:bg-blue-600 transition w-30"
-                >
-                  👁️ View
-                </a>
+      {(claimProof || paperFront) && 
+        <div className="flex flex-row gap-4 mt-4">
+          {paperFront && paperFront !== "NA" && 
+            <div className="mb-4">
+              <p className="text-sm font-semibold mb-2">📄 Paper Front:</p>
+              <div className="flex flex-col sm:flex-row gap-2 items-start">
+                <div className="flex flex-col gap-2">
+                  <a 
+                    href={paperFront} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="px-3 py-1 bg-blue-500 text-white rounded-md text-sm flex items-center justify-center hover:bg-blue-600 transition w-30"
+                  >
+                    👁️ View
+                  </a>
+                </div>
               </div>
             </div>
-          </div>
-        }
-        { claimProof && 
-          <div>
-            <p className="text-sm font-semibold mb-2">📑 Claim Proof:</p>
-            <div className="flex flex-col sm:flex-row gap-2 items-start">
-              <div className="flex flex-col gap-2">
-                <a 
-                  href={claimProof}
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="px-3 py-1 bg-blue-500 text-white rounded-md text-sm flex items-center justify-center hover:bg-blue-600 transition w-30"
-                >
-                  👁️ View
-                </a>
+          }
+          {claimProof && 
+            <div>
+              <p className="text-sm font-semibold mb-2">📑 Claim Proof:</p>
+              <div className="flex flex-col sm:flex-row gap-2 items-start">
+                <div className="flex flex-col gap-2">
+                  <a 
+                    href={claimProof}
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="px-3 py-1 bg-blue-500 text-white rounded-md text-sm flex items-center justify-center hover:bg-blue-600 transition w-30"
+                  >
+                    👁️ View
+                  </a>
+                </div>
               </div>
             </div>
-          </div>
-        }
+          }
         </div>
       }
+
+      <div className="mt-4 pt-4 border-t border-gray-200">
+        <button
+          onClick={() => setShowConfirm(true)}
+          className="px-4 py-2 bg-red-500 text-white rounded-md text-sm hover:bg-red-600 transition"
+        >
+          🗑️ Delete Submission
+        </button>
+      </div>
+
+      {/* Confirmation Modal */}
+      {showConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
+            <h3 className="text-xl font-bold mb-4">Confirm Delete</h3>
+            <p className="text-gray-600 mb-6">
+              Are you sure you want to delete this submission? This action cannot be undone.
+            </p>
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => setShowConfirm(false)}
+                disabled={isDeleting}
+                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition disabled:opacity-50"
+              >
+                {isDeleting ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -102,9 +145,13 @@ const ClaimSkeleton = () => {
 };
 
 const Submissions = () => {
-  const [submissions, setSubmissions] = useState([]); // Ensure it's an array
+  const [submissions, setSubmissions] = useState([]);
   const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+
+  const handleDeleteSubmission = (id) => {
+    setSubmissions(submissions.filter(submission => submission._id !== id));
+  };
 
   useEffect(() => {
     const getUser = async () => {
@@ -120,7 +167,6 @@ const Submissions = () => {
     const fetchSubmissions = async () => {
       try {
         const response = await axios.get(`${baseUrl}api/form/myClaims`, { withCredentials: true });
-        // console.log("API Response:", response.data.data);
 
         if (Array.isArray(response.data.data)) {
           setSubmissions(response.data.data);
@@ -138,24 +184,21 @@ const Submissions = () => {
     Promise.all([getUser(), fetchSubmissions()]);
   }, []);
 
-  console.log(submissions)
-
   return (
     <div className="h-auto min-h-[100vh] w-full flex flex-row pr-5">
       <SideBar />
       <div className="content w-full h-full flex flex-col">
         <Navbar />
-        <div className="areaContent flex w-full  px-10 min-h-[calc(100vh-120px)] h-auto rounded-2xl mt-5  flex-col">
+        <div className="areaContent flex w-full px-10 min-h-[calc(100vh-120px)] h-auto rounded-2xl mt-5 flex-col">
           <UserWelcome name={name} isLoading={isLoading} />
           <div className="w-full flex flex-col gap-5">
             {isLoading ? (
-              // Show skeleton loaders while data is loading
               Array(3).fill(0).map((_, index) => (
                 <ClaimSkeleton key={index} />
               ))
             ) : submissions.length > 0 ? (
               submissions.map((submission, index) => (
-                <Claim key={index} {...submission} />
+                <Claim key={index} {...submission} onDelete={handleDeleteSubmission} />
               ))
             ) : (
               <p className="text-gray-500 text-center">No submissions found.</p>

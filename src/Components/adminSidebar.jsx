@@ -10,7 +10,7 @@ const AdminSideBar = () => {
   async function handleLogout() {
     try {
       await axios.post(`${baseUrl}api/auth/logout`, { withCredentials: true }, { withCredentials: true });
-      navigate("/login");
+      navigate("/admin/login");
     } catch (err) {
       console.log("error while logging out");
       console.log(err);

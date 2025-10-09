@@ -153,7 +153,7 @@ export default function AdminLogin() {
       <div className="content w-full min-h-[calc(100vh-60px)] flex flex-row items-center justify-center flex-1">
         <div className="left w-[50%] min-h-[calc(100vh-70px)] flex flex-col gap-5 items-center justify-center">
           <div className="form w-full max-w-[500px]">
-            <h1 className="font-bold text-xl pb-6">Login</h1>
+            <h1 className="font-bold text-xl pb-6">Admin Login</h1>
             
             {/* Show API error message if exists */}
             {apiError && (
@@ -203,11 +203,11 @@ export default function AdminLogin() {
                 {isSubmitting ? 'Logging in...' : 'Login'}
               </button>
             </div>
-            <div className="mt-4 text-center">
+            {/* <div className="mt-4 text-center">
               <p className="text-sm text-gray-600">
                 Don't have an account? <a href="/register" className="text-blue-600 hover:underline">Sign up</a>
               </p>
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="right w-[50%] h-full flex items-center justify-center">

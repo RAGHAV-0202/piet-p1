@@ -153,7 +153,7 @@ export default function Login() {
       <div className="content w-full min-h-[calc(100vh-60px)] flex flex-col md:flex-row items-center justify-center flex-1 px-4 md:px-0">
         <div className="left w-full md:w-[50%] py-8 md:min-h-[calc(100vh-70px)] flex flex-col gap-5 items-center justify-center">
           <div className="form w-full max-w-[500px]">
-            <h1 className="font-bold text-xl pb-6">Login</h1>
+            <h1 className="font-bold text-xl pb-6">User Login</h1>
             
             {/* Show API error message if exists */}
             {apiError && (
