@@ -274,17 +274,22 @@ const AdminSubmissions = () => {
       return {
         'Title': item.title || 'Untitled',
         'Submitted By': item.user?.fullName || 'Unknown',
+        'Employee ID': item.user?.employeeId || 'N/A',
         'Department': item.user?.department || 'N/A',
+        'Designation': item.user?.designation || 'N/A',
         'Category': item.category?.[0] || 'N/A',
         'Total Incentive (₹)': item.totalAmount || 0,
         'Calculated Incentive (₹)': item.calculatedAmount || 0,
-        'Authors': authorsFormatted,
         'Number of Authors': item.numberOfAuthors || 0,
         'Publication Date': new Date(item.publicationDate).toDateString(),
-        'Venue': item.venue || 'N/A',
-        'Submission Date': new Date(item.createdAt).toLocaleString(),
-        'Status': item.status || 'N/A',
-        'Web Link': item.webLink || 'N/A'
+        'Bank Account': item.user?.bankAccount || 'N/A',
+        'IFSC Code': item.user?.ifsc || 'N/A',
+        'Branch': item.user?.branch || 'N/A',
+        // 'Authors': authorsFormatted,
+        // 'Venue': item.venue || 'N/A',
+        // 'Submission Date': new Date(item.createdAt).toLocaleString(),
+        // 'Status': item.status || 'N/A',
+        // 'Web Link': item.webLink || 'N/A'
       };
     });
   };
