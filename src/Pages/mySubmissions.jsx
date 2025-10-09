@@ -24,9 +24,25 @@ const UserWelcome = ({ name, isLoading }) => {
   );
 };
 
-const Claim = ({ _id, title, authors, publicationDate, venue, webLink, category, calculatedAmount, claimProof, paperFront, onDelete }) => {
+const Claim = ({ _id, title, authors, publicationDate, venue, webLink, category, calculatedAmount, claimProof, paperFront, createdAt, onDelete }) => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // Calculate if claim can be deleted (within 7 days)
+  const canDelete = () => {
+    const createdDate = new Date(createdAt);
+    const now = new Date();
+    const diffInDays = (now - createdDate) / (1000 * 60 * 60 * 24);
+    return diffInDays <= 7;
+  };
+
+  const isDeletable = canDelete();
+  const daysLeft = () => {
+    const createdDate = new Date(createdAt);
+    const now = new Date();
+    const diffInDays = (now - createdDate) / (1000 * 60 * 60 * 24);
+    return Math.max(0, Math.ceil(7 - diffInDays));
+  };
 
   const handleDelete = async () => {
     setIsDeleting(true);
@@ -93,10 +109,25 @@ const Claim = ({ _id, title, authors, publicationDate, venue, webLink, category,
       <div className="mt-4 pt-4 border-t border-gray-200">
         <button
           onClick={() => setShowConfirm(true)}
-          className="px-4 py-2 bg-red-500 text-white rounded-md text-sm hover:bg-red-600 transition"
+          disabled={!isDeletable}
+          className={`px-4 py-2 rounded-md text-sm transition ${
+            isDeletable
+              ? 'bg-red-500 text-white hover:bg-red-600'
+              : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          }`}
         >
           🗑️ Delete Submission
         </button>
+        {!isDeletable && (
+          <p className="text-xs text-gray-500 mt-2">
+            Deletion period expired (only allowed within 7 days of submission)
+          </p>
+        )}
+        {isDeletable && daysLeft() > 0 && (
+          <p className="text-xs text-gray-500 mt-2">
+            Can be deleted for {daysLeft()} more day{daysLeft() !== 1 ? 's' : ''}
+          </p>
+        )}
       </div>
 
       {/* Confirmation Modal */}
