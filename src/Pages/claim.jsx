@@ -357,7 +357,7 @@ const handleNumberAuthors = (e) => {
               <div className="space-y-3">
                 <label className="flex items-center text-sm font-semibold text-gray-700">
                   <span className="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
-                  {isConference ? "Title of the Conference" : "Title of the Research Paper"}
+                  {isConference ? "Title of the Conference"  / "Title of the Journal": "Title of the Research Paper"}
                   <span className="text-red-500 ml-1">*</span>
                 </label>
                 <input
@@ -781,4 +781,5 @@ const Claim = () => {
 };
 
 export default Claim;
+
 
