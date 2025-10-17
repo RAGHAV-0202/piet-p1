@@ -337,11 +337,11 @@ const handleNumberAuthors = (e) => {
                 className={`w-full px-4 py-4 rounded-xl border-2 transition-all duration-200 font-medium focus:outline-none focus:ring-4 ${normalClass} hover:border-blue-300`}
                 disabled={isLoading}
               >
-                <option value={"SCIE / WOS / ESCI,10000"}>SCIE / WOS / ESCI (₹10,000)</option>
-                <option value={"ESCI SCOPUS,5000"}>ESCI SCOPUS (₹5,000)</option>
+                <option value={"SCIE / WOS / ESCI,10000"}>(A*) SCIE / WOS / ESCI (₹10,000)</option>
+                <option value={"ESCI SCOPUS,5000"}>(A) ESCI SCOPUS (₹5,000)</option>
                 <option value={"Book Chapter international,5000"}>Book Chapter International (₹5,000)</option>
                 <option value={"Book Chapter national,3000"}>Book Chapter National (₹3,000)</option>
-                <option value={"UGC,3500"}>UGC (₹3,500)</option>
+                <option value={"UGC,3500"}>(BC) UGC (₹3,500)</option>
                 {/* <option value={"PUBLICATION,15000"}>Publication (₹15,000)</option> */}
                 <option value={"Book International,10000"}>Book International (₹10,000)</option>
                 <option value={"Book National,7500"}>Book National (₹7,500)</option>
@@ -357,7 +357,7 @@ const handleNumberAuthors = (e) => {
               <div className="space-y-3">
                 <label className="flex items-center text-sm font-semibold text-gray-700">
                   <span className="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
-                  {isConference ? "Title of the Conference / Journal" : "Title of the Research Paper"}
+                  {isConference ? "Title of the Conference / Jornal" : "Title of the Research Paper"}
                   <span className="text-red-500 ml-1">*</span>
                 </label>
                 <input
@@ -781,6 +781,4 @@ const Claim = () => {
 };
 
 export default Claim;
-
-
 
