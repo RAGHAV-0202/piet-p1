@@ -11,6 +11,8 @@ import AdminSubmissions from "./Pages/adminSubmissions.jsx";
 import AdminDashboard from "./Pages/adminDashboard.jsx";
 import AdminLogin from "./Pages/adminLogin.jsx";
 import AdminManageUsers from "./Pages/adminManageUsers.jsx";
+import ResetRequest from "./Pages/reset-password-request.jsx";
+import ResetPassword from "./Pages/reset-password.jsx";
 
 const ReactRouterSetup = () => {
   return (
@@ -23,6 +25,10 @@ const ReactRouterSetup = () => {
         <Route path="/login" element={<Login/>} />
         <Route path="/submissions" element={<Submissions/>}/>
         <Route path="/profile" element={<Profile/>}/>
+        <Route path="/reset-request" element={<ResetRequest/>}/>
+        <Route path="/c03ef05e65659d2a75944d3d72eb71f4f94c6f9b/:token" element={<ResetPassword/>}/>
+
+
         <Route path="*" element={<Error />} />
 
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
