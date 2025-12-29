@@ -1,0 +1,33 @@
+
+@media screen and (width < 1900px) {
+    .bg{
+        height: 100px
+    }
+    .info .image{
+        width: 110px;
+        height: 110px;
+        transform: translateY(-10%);
+        /* background-color: rebeccapurple; */
+        margin-bottom: 10% ;
+    }
+    .info{
+        /* background-color: rebeccapurple; */
+    }
+    h1{
+        padding-bottom: 15px ;
+        font-size: 22px;
+    }
+    h4{
+        font-size: 18px;
+        padding-top: 10px;
+    }
+    .moreDetails p {
+        font-size: 15px;
+    }
+    .moreDetails p span{
+        font-size: 14px;
+    }
+    .details{
+        padding-top: 40px;
+    }
+}

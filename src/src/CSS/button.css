@@ -1,0 +1,238 @@
+:root {
+  --green: #2BCB96;
+  --gray: #BBBBBB;
+  --btn-w: 380px;
+  --btn-h: 120px;
+  --timer-w: 120px;
+  --success-w: 50px;
+  --success-h: 45px;
+}
+
+
+.btnSVG {
+  width: 100%;
+  height: 100%;
+}
+
+/* ------------------------------- buttons */  
+.btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 50px;
+  font-family: 'Work Sans', sans-serif;
+  transition: all .5s ease-in-out;
+  outline: none;
+}
+
+.btn-lg {
+  width: var(--btn-w);
+  height: var(--btn-h);
+  border: 5px solid;
+  border-radius: calc(var(--btn-h) / 2);
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+}
+
+.btn-sm {
+  width: 100px;
+  height: 40px;
+  border: none;
+  border-radius: 3px;
+  font-size: 16px;
+}
+
+.btn-green {
+  color: var(--green);
+  background: white;
+  border-color: var(--green);
+}
+
+.btn-green:hover {
+  color: white;
+  background: var(--green);
+}
+
+.btn-black {
+  color: white;
+  background: darkgray;
+}
+
+.btn-black:hover {
+  background: black;
+}
+
+/* --------------------------------- timer */  
+.timer {
+  position: absolute;
+  left: calc(50% - var(--timer-w) / 2);
+  width: var(--timer-w);
+  height: var(--timer-w);
+  opacity: 0;
+}
+
+.timer svg {
+  fill: none;
+  stroke: var(--green);
+  stroke-width: 10px;   
+  transform: rotate(-0.25turn);
+  transform-origin: center center;
+  stroke-dasharray: 383;
+  stroke-dashoffset: 383;
+  transition: stroke-dashoffset .3s ease-in-out;
+}
+
+/* -------------------------- icon success */  
+.icon-success {
+  position: absolute;
+  top: 35px;
+  left: calc(50% - var(--success-w) / 2);
+  width: var(--success-w);
+  height: var(--success-h);
+  border: black;
+}
+
+.icon-success svg {
+  fill: none;
+  stroke: white;
+  stroke-width: 6px;
+  stroke-linecap: round;
+  stroke-dasharray: 50;
+  stroke-dashoffset: 50;
+  transition: stroke-dashoffset .2s .2s linear;
+  opacity: 0;
+}
+
+/* ------------------------- button states */
+/* ----------------------- do submit */  
+.do-submit {
+  color: white;
+  background: var(--green);
+  border-color: var(--green);
+  animation: closeButton .3s .3s ease-in forwards;
+}
+
+.do-submit .text {
+  animation: hideText .3s forwards;
+}
+
+.do-submit .timer {
+  transition: opacity .1s .6s linear;
+  opacity: 1;
+  z-index: 1;
+}
+
+/* -------------------------- success */  
+.success {
+  border-color: var(--green);
+  animation: openButton .3s ease-in forwards;
+}
+
+.success .timer {
+  opacity: 0;
+  transition: opacity .01s linear;
+}
+
+.success .icon-success svg {
+  opacity: 1;
+  stroke-dashoffset: 0;
+}
+
+/* --------------------------- reset */    
+.reset {
+  animation: resetButton .5s ease-in forwards;
+}
+
+.reset .icon-success {
+  opacity: 0;
+}
+
+.reset .text {
+  animation: showText .8s ease-in forwards;
+}
+
+/* ----------------------------- keyframes */
+@keyframes closeButton {
+  90% {
+    width: var(--timer-w);
+    height: var(--timer-w);
+    background: white;
+    border-width: 10px;
+    border-color: var(--gray);
+  }
+  100% {
+    width: var(--timer-w);
+    height: var(--timer-w);
+    background: white;
+    border-width: 10px;
+    border-color: var(--gray);
+    border-radius: 50%;
+  }
+}
+
+@keyframes openButton {
+  from {
+    width: var(--timer-w);
+    height: var(--timer-w);
+    background: white;
+    border-color: var(--green);
+    border-width: 10px;
+    border-radius: 50%;
+  }
+  90% {
+    width: var(--btn-w);
+    height: var(--btn-h);
+    background: var(--green);
+    border-width: 5px;
+  }
+  100% {
+    width: var(--btn-w);
+    height: var(--btn-h);
+    background: var(--green);
+    border-color: var(--green);
+    border-width: 5px;
+    border-radius: calc(var(--btn-h) / 2);
+  }
+}
+
+@keyframes resetButton {
+  to {
+    background: white;
+    color: var(--green);
+  }
+}
+
+@keyframes hideText {
+  from {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  20% {
+    transform: scaleX(1.1);
+  }
+  40% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes showText {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ----------------------- utility classes */
+.top-left {
+  position: absolute;
+  top: 30px;
+  left: 20px;
+}

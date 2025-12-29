@@ -1,0 +1,222 @@
+@media screen and (width < 1920px) {
+    .centered{
+        width: 100% !important;
+        height: 100% !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+    }
+    .register_page{
+        padding: 0;
+    }
+    .dashboard_content {
+        background-color: re;
+    }
+
+    .navbar{
+        height: 60px !important;
+        /* background-color: rebeccapurple ; */
+        padding-top: 10px;
+        padding-bottom: 10px;
+        display: flex;
+        align-items: center !important;
+    }
+    .navbar a {
+        padding: 4px;
+        font-size: 14px;
+    }
+    .name{
+        font-size: 14px;
+    }
+    .designation{
+        font-size: 12px;
+    }
+    .navbar img{
+        width: 40px;
+        height: 40px;
+    }
+    .navbar a {
+        background-color: honeydew;
+    }
+    .navbar a .sidebar {
+        padding: 10px 20px;
+        /* background-color: rebeccapurple; */
+    }
+
+    .sidebar{
+        /* background-color: rebeccapurple; */
+    }
+
+    .sidebar a {
+        /* background-color: red; */
+    }
+
+    .sideBar_branding {
+        font-size: 14px;
+
+    }
+
+    .sidebar_logo {
+        /* background-color: yellow; */
+        padding-left: 30px;
+        height: 60px !important;
+    }
+
+    .sidebar_options {
+        /* background-color: lawngreen; */
+        padding-top: 20%;
+        display: flex;
+        justify-content: space-between;
+        height: calc(100% - 60px);
+    }
+
+    .sidebar_options .dashboard_links_div {
+        /* background-color: lightcoral; */
+        /* height: calc(); */
+        padding-top: 20px;
+        height: 90% !important;
+        gap: 10px;
+    }
+
+    .sidebar_options .dashboard_links_div a,
+    .logout_div button {
+        font-size: 14px !important;
+        height: 40px;
+    }
+
+    .logout_div {
+        height: 10% !important;
+        /* background-color: red; */
+    }
+
+    .sidebar div a span,
+    .logout_div button span {
+        font-size: 14px;
+    }
+
+    .sidebar div a span i,
+    .logout_div button span i {
+        font-size: 16px;
+    }
+
+
+    .dashboard_areaContent {
+        /* background-color: yellowgreen; */
+        padding: 10px 10px !important;
+    }
+    .dashboard_areaContent{
+        /* background-color: yellowgreen; */
+        padding: 10px 10px !important;
+    }
+    .userWlcm{
+        /* background-color: rebeccapurple; */
+        height: 70px;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px ;
+    }
+
+    .sidebar_options a span, .logout_div button span{
+        width: 20%;
+    }
+
+    .text_sidebar_option{
+        display: flex;
+        text-align: left;
+        width: 200px !important;
+        width: 80%;
+    }
+
+}
+
+
+/* Add these styles to your responsive.css file */
+
+/* Base styles */
+/* Base styles */
+.sidebar {
+    transition: all 0.3s ease;
+}
+
+/* Mobile menu button */
+.mobile-menu-btn {
+    display: none;
+}
+
+/* Content blur effect when menu is open */
+.content-blur {
+    filter: blur(4px);
+    transition: filter 0.3s ease;
+    pointer-events: none;
+    /* Prevents interaction with blurred content */
+}
+
+/* Transition for adding/removing blur */
+#main-content {
+    transition: filter 0.3s ease;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+
+    /* Show mobile menu button */
+    .mobile-menu-btn {
+        display: block;
+    }
+
+    /* Hide desktop sidebar on mobile */
+    .sidebar.desktop {
+        display: none;
+    }
+
+    /* Mobile sidebar styling */
+    .sidebar.mobile {
+        width: 80%;
+        max-width: 300px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 1000;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Mobile menu items */
+    .sidebar.mobile .menu-item {
+        padding: 12px 16px;
+        border-bottom: 1px solid #f1f1f1;
+    }
+
+    /* Mobile sidebar logo area */
+    .sidebar.mobile .sidebar_logo {
+        height: 50px !important;
+        padding: 8px 16px;
+        border-bottom: 1px solid #f1f1f1;
+    }
+
+    /* Overlay with blur when mobile menu is open */
+    .mobile-menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        /* background-color: rgba(0, 0, 0, 0.2); */
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        z-index: 999;
+        transition: all 0.3s ease;
+    }
+
+    .navProfile{
+        display: none;
+    }
+    .sidebar_logo_nav{
+        display: flex;
+        background-color: transparent !important;
+    }
+    .navbar{
+        justify-content: left;
+    }
+
+}

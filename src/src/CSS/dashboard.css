@@ -1,0 +1,88 @@
+@media screen and (width < 1920px) {
+    .dashboard_main_div {
+        /* Remove the red background that's showing through as a gap */
+        max-width: 100vw;
+        max-height: 100vh;
+        overflow: hidden;
+    }
+
+    .dashboard_content {
+        width: 70% !important;
+    }
+
+    .dashboard_areaContent {
+        /* background-color: yellowgreen; */
+        padding: 10px !important;
+        padding-top: 0 !important;
+        margin-top:  0 !important;
+        /* Make sure this doesn't have extra margin creating gaps */
+        /* margin-top: 5px; */
+    }
+
+    .userWlcm {
+        /* Make this background match parent or be opaque */
+        /* background-color: rebeccapurple; */
+        /* Match your purple element */
+        margin: 0 0 20px 0;
+        /* Clean up margins */
+        height: auto;
+        /* Let it size naturally */
+        min-height: 70px;
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        /* Ensure full width */
+    }
+
+    .actions {
+        padding: 20px;
+        gap: 20px !important;
+        width: 100%;
+        /* Ensure full width */
+        margin: 0;
+        /* Remove any default margins */
+    }
+
+    .actions a {
+        width: 120px;
+        height: 120px;
+        /* Make sure these items flex properly */
+        flex-shrink: 0;
+    }
+
+    .actions i {
+        font-size: 30px;
+    }
+
+    .actions p {
+        font-size: 12px !important;
+        text-align: center;
+        gap: 5px;
+        height: auto;
+        /* Let it size naturally */
+        padding: 5px 0;
+    }
+
+    .actions p i {
+        font-size: 14px;
+    }
+}
+
+/* Add this to handle even smaller screens */
+@media screen and (width < 768px) {
+    .dashboard_content {
+        width: 100% !important;
+        /* Full width on mobile */
+    }
+
+    .actions {
+        justify-content: center;
+        /* Center items on small screens */
+    }
+
+    .dashboard_main_div {
+        flex-direction: column;
+        /* Stack sidebar and content */
+    }
+}

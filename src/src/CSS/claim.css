@@ -1,0 +1,322 @@
+@media screen and (max-width: 1920px) and (min-width: 1400px) {
+
+    /* Container sizing */
+    .areaContentClaim {
+        padding: 15px;
+    }
+
+    .claimBox {
+        padding: 1rem;
+    }
+
+    .claimBox h1 {
+        font-size: 1.25rem;
+        padding-bottom: 1.5rem;
+    }
+
+    .areaForDetails {
+        max-width: 700px;
+        padding: 1.75rem;
+    }
+
+    /* Form elements */
+    .areaForDetails p,
+    .areaForDetails span {
+        font-size: 0.9rem;
+    }
+
+    .areaForDetails input[type="text"],
+    .areaForDetails input[type="date"],
+    .areaForDetails select {
+        height: 2.5rem;
+        font-size: 0.9rem;
+    }
+
+    .areaForDetails select {
+        max-width: 350px;
+    }
+
+    /* Author sections */
+    .author-inputs {
+        gap: 1.5rem;
+    }
+
+    /* Upload buttons */
+    .upload-btn {
+        padding: 0.4rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    /* Submit button */
+    .submit-btn {
+        width: 180px;
+        height: 38px;
+        font-size: 0.9rem;
+    }
+
+    /* General spacing */
+    .areaForDetails span {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Additional styles for slightly smaller screens but still HD */
+@media screen and (max-width: 1400px) and (min-width: 1200px) {
+    .areaContentClaim {
+        padding: 12px;
+    }
+
+    .claimBox {
+        padding: 0.75rem;
+    }
+
+    .areaForDetails {
+        max-width: 650px;
+        padding: 1.5rem;
+    }
+
+    /* Form elements - further reduced for smaller HD screens */
+    .areaForDetails p,
+    .areaForDetails span {
+        font-size: 0.85rem;
+    }
+
+    .areaForDetails input[type="text"],
+    .areaForDetails input[type="date"],
+    .areaForDetails select {
+        height: 2.25rem;
+        font-size: 0.85rem;
+    }
+
+    .areaForDetails select {
+        max-width: 320px;
+    }
+
+    /* Author sections */
+    .author-inputs input {
+        margin-bottom: 0.5rem;
+    }
+}
+.claimBox {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.25rem;
+    border-radius: 1rem;
+}
+
+.claimBox h1 {
+    font-weight: bold;
+    font-size: 1.25rem;
+    padding-bottom: 2.5rem;
+}
+
+.areaForDetails {
+    width: 100%;
+    max-width: 800px;
+    background-color: white;
+    padding: 2.5rem;
+    border-radius: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Form elements styling */
+.areaForDetails span {
+    margin-bottom: 1.25rem;
+}
+
+.areaForDetails p {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.areaForDetails input[type="text"],
+.areaForDetails input[type="date"],
+.areaForDetails select {
+    width: 100%;
+    height: 3rem;
+    border-radius: 0.25rem;
+    padding: 0 1.5rem;
+    background-color: #f4f4f5;
+    border: 1px solid transparent;
+}
+
+.areaForDetails select {
+    max-width: 400px;
+}
+
+/* Author fields */
+.author-fields {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: 1.25rem;
+    margin-bottom: 1.25rem;
+}
+
+.author-field {
+    margin-bottom: 0.5rem;
+    margin-right: 2.5rem;
+}
+
+.author-inputs {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 2.5rem;
+}
+
+/* Upload buttons */
+.upload-btn {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    background-color: #2563eb;
+    color: white;
+    font-weight: 500;
+    border-radius: 0.375rem;
+    transition: background-color 0.2s;
+}
+
+.upload-btn:hover {
+    background-color: #1d4ed8;
+}
+
+.file-name {
+    margin-top: 0.5rem;
+    color: #16a34a;
+    font-weight: 500;
+}
+
+/* Submit button */
+.submit-btn {
+    width: 200px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    background-color: #16a34a;
+    color: white;
+    font-weight: 500;
+    border-radius: 0.375rem;
+    transition: background-color 0.2s;
+}
+
+.submit-btn:hover {
+    background-color: #15803d;
+}
+
+.submit-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Error state */
+.error-field {
+    border: 1px solid #ef4444 !important;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .claimBox {
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+    }
+
+    .claimBox h1 {
+        font-size: 1.125rem;
+        padding-bottom: 1.25rem;
+    }
+
+    .areaForDetails {
+        padding: 1.5rem 1rem;
+        border-radius: 0.75rem;
+    }
+
+    .areaForDetails span {
+        margin-bottom: 1rem;
+    }
+
+    .areaForDetails p {
+        font-size: 0.875rem;
+    }
+
+    .areaForDetails input[type="text"],
+    .areaForDetails input[type="date"],
+    .areaForDetails select {
+        height: 2.5rem;
+        padding: 0 0.75rem;
+    }
+
+    .areaForDetails select {
+        max-width: 100%;
+    }
+
+    .author-fields {
+        margin-left: 0;
+    }
+
+    .author-field {
+        margin-right: 0;
+        width: 100%;
+    }
+
+    .author-inputs {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .author-inputs input {
+        margin-bottom: 0.75rem;
+    }
+
+    .upload-btn {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.875rem;
+    }
+
+    .file-name {
+        font-size: 0.75rem;
+        word-break: break-all;
+    }
+
+    .submit-btn {
+        width: 100%;
+        height: 36px;
+        padding: 0.375rem 0.75rem;
+        font-size: 0.875rem;
+    }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+    .areaForDetails {
+        padding: 1rem 0.75rem;
+    }
+
+    .areaForDetails p {
+        font-size: 0.75rem;
+    }
+
+    .claimBox h1 {
+        font-size: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    .areaForDetails input[type="text"],
+    .areaForDetails input[type="date"],
+    .areaForDetails select {
+        height: 2.25rem;
+        font-size: 0.875rem;
+    }
+}
