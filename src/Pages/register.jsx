@@ -1,10 +1,5 @@
 import { useState } from "react";
 import React from "react";
-import bgImg from "../assets/image.png"
-import baseUrl from "../baseurl";
-import axios from "axios";
-import { useNavigate } from 'react-router-dom';
-import "../CSS/responsive.css"
 
 const Progress = (props) => {
   return (
@@ -40,39 +35,6 @@ const Progress = (props) => {
   )
 }
 
-const LoginNav = () => {
-  const navigate = useNavigate()
-
-  React.useEffect(() => {
-    const getUser = async () => {
-      try {
-        await axios.get(`${baseUrl}api/auth/loggedIn`, { withCredentials: true }, { withCredentials: true })
-        navigate("/dashboard")
-      } catch (err) {
-        console.log("error while checking if logged in")
-        console.log(err)
-      }
-    }
-
-    getUser()
-  }, [])
-  
-  return (
-    <div className="navbar shadow-2xl px-4 md:px-10 w-full h-[60px] flex items-center bg-white">
-      <div className="logo h-auto w-auto md:w-[280px] flex flex-row items-center">
-        <div className="h-[60px] flex items-center">
-          <img className="h-[40px] md:h-[50px]" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBlh8qU-hFL2yJUpMHEMY0sprJ7UqhJA2wTjzCJpC---5hXlfQY1yW02ul-ScBLpgW&usqp=CAU" alt="logo" />
-        </div>
-        <div className="branding w-full h-full flex flex-col capitalize font-semibold leading-4 md:leading-5 pl-2 md:pl-5 text-[10px] md:text-[14px]">
-          <span className="uppercase">panipat insitute of</span>
-          <span className="uppercase">Engineering and</span>
-          <span className="uppercase">technology</span>
-        </div>
-      </div>
-    </div>
-  )
-}
-
 const Info = (props) => {
   return (
     <div className="info w-full h-[80px] flex flex-col">
@@ -81,6 +43,32 @@ const Info = (props) => {
     </div>
   )
 }
+
+const PasswordStrengthIndicator = ({ password }) => {
+  const requirements = [
+    { label: "At least 6 characters", test: (pwd) => pwd.length >= 6 },
+    { label: "One uppercase letter", test: (pwd) => /[A-Z]/.test(pwd) },
+    { label: "One lowercase letter", test: (pwd) => /[a-z]/.test(pwd) },
+    { label: "One number", test: (pwd) => /[0-9]/.test(pwd) },
+    { label: "One special character", test: (pwd) => /[!@#$%^&*(),.?":{}|<>]/.test(pwd) }
+  ];
+
+  return (
+    <div className="mt-2 space-y-1">
+      {requirements.map((req, index) => {
+        const isMet = req.test(password);
+        return (
+          <div key={index} className="flex items-center gap-2 text-xs">
+            <div className={`w-4 h-4 rounded-full flex items-center justify-center ${isMet ? 'bg-green-500' : 'bg-gray-300'}`}>
+              {isMet && <span className="text-white text-[10px]">✓</span>}
+            </div>
+            <span className={isMet ? 'text-green-600' : 'text-gray-500'}>{req.label}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
 export default function Register() {
   const [step, setStep] = React.useState(1);
@@ -105,16 +93,26 @@ export default function Register() {
   const [touched, setTouched] = React.useState({});
   const [apiError, setApiError] = React.useState("");
   const [formError, setFormError] = React.useState("");
+  const [showPasswordReqs, setShowPasswordReqs] = React.useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    // Mark field as touched
     setTouched({ ...touched, [e.target.name]: true });
-    // Clear form-level errors when user makes changes
     setFormError("");
     setApiError("");
-    // Validate the field on change
     validateField(e.target.name, e.target.value);
+  };
+
+  const validatePassword = (password) => {
+    const requirements = {
+      length: password.length >= 6,
+      uppercase: /[A-Z]/.test(password),
+      lowercase: /[a-z]/.test(password),
+      number: /[0-9]/.test(password),
+      special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+    };
+
+    return Object.values(requirements).every(req => req);
   };
 
   const validateField = (name, value) => {
@@ -124,8 +122,8 @@ export default function Register() {
       error = "Required";
     } else if (name === "email" && !/\S+@\S+\.\S+/.test(value)) {
       error = "Invalid email address";
-    } else if (name === "password" && value.length < 6) {
-      error = "Password must be at least 6 characters";
+    } else if (name === "password" && !validatePassword(value)) {
+      error = "Password must meet all requirements";
     } else if (name === "confirmPassword" && value !== formData.password) {
       error = "Passwords do not match";
     } else if (name === "bankAccount" && !/^\d+$/.test(value)) {
@@ -141,7 +139,6 @@ export default function Register() {
   const validateStep = (stepNumber) => {
     let valid = true;
     let newTouched = { ...touched };
-    let newErrors = { ...errors };
     
     const fieldsToValidate = {
       1: ["fullName", "email", "password", "confirmPassword"],
@@ -150,7 +147,6 @@ export default function Register() {
       4: ["bankAccount", "ifsc", "branch"]
     };
     
-    // Mark all fields in current step as touched
     fieldsToValidate[stepNumber].forEach(field => {
       newTouched[field] = true;
       const isValid = validateField(field, formData[field]);
@@ -158,7 +154,6 @@ export default function Register() {
     });
     
     setTouched(newTouched);
-    
     return valid;
   };
 
@@ -166,13 +161,11 @@ export default function Register() {
     const isValid = validateStep(step);
     if (isValid) {
       setStep(prevStep => prevStep + 1);
-      setFormError(""); // Clear form error when moving to next step
+      setFormError("");
     } else {
       setFormError("Please fix the errors before proceeding");
     }
   };
-  
-  const navigate = useNavigate();
 
   const handleSubmit = async () => {
     const isValid = validateStep(4);
@@ -181,36 +174,19 @@ export default function Register() {
       return;
     }
     
-    try {
-      setApiError("");
-      const response = await axios.post(baseUrl + "api/auth/register", formData, { withCredentials: true });
-      if (response.data.success) {
-        navigate("/dashboard");
-      } else {
-        setApiError(response.data.message || "Registration failed");
-      }
-    } catch (error) {
-      console.log("Error while registering");
-      console.log(error);
-      
-      if (error.response && error.response.data) {
-        setApiError(error.response.data.message || "Registration failed. Please try again.");
-      } else {
-        setApiError("Network error. Please check your connection and try again.");
-      }
-    }
+    // Simulate API call
+    console.log("Form submitted:", formData);
+    alert("Registration successful! (Demo mode)");
   };
 
   const getInputClass = (fieldName) => {
     const baseClass = "w-full mt-1 h-[2%] rounded-lg border-[1px] px-3 py-2 md:py-[1%]";
-    // Only show error border if field has been touched and has an error
     if (touched[fieldName] && errors[fieldName]) {
       return `${baseClass} border-red-500 bg-red-50`;
     }
     return `${baseClass} border-blue-400`;
   };
 
-  // Function to display error message
   const showError = (fieldName) => {
     if (touched[fieldName] && errors[fieldName]) {
       return <p className="text-red-500 text-xs mt-1">{errors[fieldName]}</p>;
@@ -220,7 +196,19 @@ export default function Register() {
 
   return (
     <div className="register_page w-full h-full min-h-screen bg-[#EDEFFD] flex flex-col items-center overflow-x-hidden">
-      <LoginNav />
+      {/* Navbar */}
+      <div className="navbar shadow-2xl px-4 md:px-10 w-full h-[60px] flex items-center bg-white">
+        <div className="logo h-auto w-auto md:w-[280px] flex flex-row items-center">
+          <div className="h-[60px] flex items-center">
+            <img className="h-[40px] md:h-[50px]" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBlh8qU-hFL2yJUpMHEMY0sprJ7UqhJA2wTjzCJpC---5hXlfQY1yW02ul-ScBLpgW&usqp=CAU" alt="logo" />
+          </div>
+          <div className="branding w-full h-full flex flex-col capitalize font-semibold leading-4 md:leading-5 pl-2 md:pl-5 text-[10px] md:text-[14px]">
+            <span className="uppercase">panipat insitute of</span>
+            <span className="uppercase">Engineering and</span>
+            <span className="uppercase">technology</span>
+          </div>
+        </div>
+      </div>
       
       <div className="content w-screen min-h-[calc(100vh-60px)] h-full flex flex-row items-center justify-center flex-1 overflow-x-hidden">
         <div className="left w-full md:w-1/2 lg:max-w-[600px] min-h-[calc(100vh-70px)] h-full rounded-l-3xl flex flex-col gap-5 items-center justify-center p-4 md:p-8 overflow-x-hidden">
@@ -228,14 +216,12 @@ export default function Register() {
             <Progress step={step} setStep={setStep} />
             <Info step={step} />
             
-            {/* Form-level error message */}
             {formError && (
               <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                 <p className="font-medium">{formError}</p>
               </div>
             )}
             
-            {/* API error message */}
             {apiError && (
               <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                 <p className="font-medium">{apiError}</p>
@@ -277,12 +263,19 @@ export default function Register() {
                       name="password" 
                       value={formData.password} 
                       onChange={handleChange} 
-                      onBlur={() => setTouched({...touched, password: true})}
+                      onFocus={() => setShowPasswordReqs(true)}
+                      onBlur={() => {
+                        setTouched({...touched, password: true});
+                        setShowPasswordReqs(false);
+                      }}
                       className={getInputClass("password")} 
                       type="password" 
-                      placeholder="Set Password (Min Length 6)" 
+                      placeholder="Enter a strong password" 
                     />
                     {showError("password")}
+                    {(showPasswordReqs || (touched.password && formData.password)) && (
+                      <PasswordStrengthIndicator password={formData.password} />
+                    )}
                   </span>
                   <span className="mb-[10px]">
                     <span className="pb-5 text-[14px] font-medium">Confirm Password</span>
@@ -293,7 +286,7 @@ export default function Register() {
                       onBlur={() => setTouched({...touched, confirmPassword: true})}
                       className={getInputClass("confirmPassword")} 
                       type="password" 
-                      placeholder="Set Password (Min Length 6)" 
+                      placeholder="Re-enter your password" 
                     />
                     {showError("confirmPassword")}
                   </span>
@@ -495,13 +488,13 @@ export default function Register() {
           </div>
         </div>
 
-        {/* Image section - only visible on tablet and desktop */}
-        <div className="right hidden md:flex w-1/2 h-full rounded-r-3xl items-center justify-center">
-          <img className="w-full" src={bgImg} alt="bg" />
+        <div className="right hidden md:flex w-1/2 h-full rounded-r-3xl items-center justify-center bg-gradient-to-br from-blue-100 to-purple-100">
+          <div className="text-center p-8">
+            <h2 className="text-3xl font-bold text-gray-800 mb-4">Welcome to PIET</h2>
+            <p className="text-gray-600">Complete your registration to get started</p>
+          </div>
         </div>
       </div>
     </div>
   )
 }
-
-
