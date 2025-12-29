@@ -15,21 +15,32 @@ const Navbar = () => {
   useEffect(() => {
     const getUser = async () => {
       try {
+        const token = localStorage.getItem("accessToken");
+
+        if (!token) {
+          navigate("/login");
+          return;
+        }
+
         const response = await axios.get(
           `${baseUrl}api/auth/loggedIn`,
-          { withCredentials: true },
-          { withCredentials: true }
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
+
         setData(response.data.data.user);
       } catch (err) {
-        console.log("error while checking if logged in");
-        console.log(err);
-        navigate("/admin/login");
+        console.log("error while checking if logged in", err);
+        navigate("/login");
       }
     };
 
     getUser();
   }, [navigate]);
+
 
   // Close dropdown when clicking outside
   useEffect(() => {

@@ -283,14 +283,15 @@ const handleNumberAuthors = (e) => {
     try {
         // Log FormData contents (add this right before the axios.post call)
         console.log("FormData contents:");
+        const token = localStorage.getItem("accessToken");
         for (let [key, value] of formData.entries()) {
-        console.log(`${key}: ${value instanceof File ? value.name : value}`);
+           console.log(`${key}: ${value instanceof File ? value.name : value}`);
         }
         const response = await axios.post(
         `${baseUrl}api/form/claim`,
         formData,
         {
-            headers: { "Content-Type": "multipart/form-data" },
+            headers: { "Content-Type": "multipart/form-data"  ,  Authorization: `Bearer ${token}` },
             withCredentials: true, // Send authentication cookies
         }
         );

@@ -185,25 +185,39 @@ const Submissions = () => {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+
+    const axiosConfig = {
+      withCredentials: true, // cookie fallback
+      headers: token
+        ? { Authorization: `Bearer ${token}` }
+        : {},
+    };
+
     const getUser = async () => {
       try {
-        const response = await axios.get(`${baseUrl}api/profile/profile`, { withCredentials: true });
+        const response = await axios.get(
+          `${baseUrl}api/profile/profile`,
+          axiosConfig
+        );
         setName(response.data?.data.fullName);
       } catch (err) {
-        console.log("error while getting profile");
-        console.log(err);
+        console.log("error while getting profile", err);
       }
     };
 
     const fetchSubmissions = async () => {
       try {
-        const response = await axios.get(`${baseUrl}api/form/myClaims`, { withCredentials: true });
+        const response = await axios.get(
+          `${baseUrl}api/form/myClaims`,
+          axiosConfig
+        );
 
-        if (Array.isArray(response.data.data)) {
-          setSubmissions(response.data.data);
-        } else {
-          setSubmissions([]);
-        }
+        setSubmissions(
+          Array.isArray(response.data.data)
+            ? response.data.data
+            : []
+        );
       } catch (err) {
         console.error("Error fetching submissions:", err);
         setSubmissions([]);
@@ -214,6 +228,7 @@ const Submissions = () => {
 
     Promise.all([getUser(), fetchSubmissions()]);
   }, []);
+
 
   return (
     <div className="h-auto min-h-[100vh] w-full flex flex-row pr-5">

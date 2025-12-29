@@ -35,11 +35,22 @@ const Profile = () => {
   useEffect(() => {
     async function getUser() {
       try {
-        const response = await axios.get(`${baseUrl}api/profile/profile`, { withCredentials: true });
+        const token = localStorage.getItem("accessToken");
+        console.log("Token:", token);
+
+        const response = await axios.get(
+          `${baseUrl}api/profile/profile`,
+          {
+            withCredentials: true, // cookie fallback
+            headers: token
+              ? { Authorization: `Bearer ${token}` }
+              : {},
+          }
+        );
+
         setUser(response.data?.data);
       } catch (err) {
-        console.log("error while getting profile");
-        console.log(err);
+        console.log("error while getting profile", err);
       } finally {
         setIsLoading(false);
       }
@@ -47,6 +58,7 @@ const Profile = () => {
 
     getUser();
   }, []);
+
 
   console.log(user);
 

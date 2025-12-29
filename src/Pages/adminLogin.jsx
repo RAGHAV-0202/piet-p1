@@ -12,8 +12,10 @@ const LoginNav = () => {
     React.useEffect(()=>{
         const getUser = async()=>{
             try{
-                await axios.get(`${baseUrl}api/admin/login` , { withCredentials: true } , { withCredentials: true })
+                const data = await axios.get(`${baseUrl}api/admin/login` , { withCredentials: true } , { withCredentials: true })
                 // console.log(response)
+                const accessToken = data.data.accessToken 
+                localStorage.setItem("accessToken" , accessToken)
                 navigate("/dashboard")
             }catch(err){
                 console.log("error while checking if logged in")

@@ -13,7 +13,6 @@ const LoginNav = () => {
         const getUser = async()=>{
             try{
                 await axios.get(`${baseUrl}api/auth/loggedIn` , { withCredentials: true } , { withCredentials: true })
-                // console.log(response)
                 navigate("/dashboard")
             }catch(err){
                 console.log("error while checking if logged in")
@@ -119,7 +118,11 @@ export default function Login() {
       });
       
       if (response.data.success) {
-        // Successfully logged in
+        console.log("success line 121")
+        console.log(response.data.data)
+        const accessToken = response.data.data.accessToken 
+        localStorage.setItem("accessToken" , accessToken)
+
         navigate("/dashboard");
       } else {
         // Server returned a success:false response
