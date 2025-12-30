@@ -124,8 +124,18 @@ export default function Register() {
       error = "Required";
     } else if (name === "email" && !/\S+@\S+\.\S+/.test(value)) {
       error = "Invalid email address";
-    } else if (name === "password" && value.length < 6) {
-      error = "Password must be at least 6 characters";
+    } else if (name === "password") {
+      if (value.length < 6) {
+        error = "Password must be at least 6 characters";
+      } else if (!/(?=.*[a-z])/.test(value)) {
+        error = "Password must contain at least one lowercase letter";
+      } else if (!/(?=.*[A-Z])/.test(value)) {
+        error = "Password must contain at least one uppercase letter";
+      } else if (!/(?=.*\d)/.test(value)) {
+        error = "Password must contain at least one number";
+      } else if (!/(?=.*[@$!%*?&])/.test(value)) {
+        error = "Password must contain at least one special character (@$!%*?&)";
+      }
     } else if (name === "confirmPassword" && value !== formData.password) {
       error = "Passwords do not match";
     } else if (name === "bankAccount" && !/^\d+$/.test(value)) {
@@ -218,6 +228,52 @@ export default function Register() {
     return null;
   };
 
+  // Password strength indicator
+  const getPasswordStrength = (password) => {
+    const criteria = {
+      hasLowercase: /(?=.*[a-z])/.test(password),
+      hasUppercase: /(?=.*[A-Z])/.test(password),
+      hasNumber: /(?=.*\d)/.test(password),
+      hasSpecial: /(?=.*[@$!%*?&])/.test(password),
+      hasLength: password.length >= 6
+    };
+    return criteria;
+  };
+
+  const PasswordStrengthIndicator = ({ password }) => {
+    if (!password) return null;
+    
+    const strength = getPasswordStrength(password);
+    
+    return (
+      <div className="mt-2 space-y-1">
+        <p className="text-xs font-medium text-gray-600">Password must contain:</p>
+        <div className="space-y-0.5">
+          <div className="flex items-center gap-2">
+            <div className={`w-3 h-3 rounded-full ${strength.hasLength ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+            <span className={`text-xs ${strength.hasLength ? 'text-green-600' : 'text-gray-500'}`}>At least 6 characters</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className={`w-3 h-3 rounded-full ${strength.hasLowercase ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+            <span className={`text-xs ${strength.hasLowercase ? 'text-green-600' : 'text-gray-500'}`}>One lowercase letter (a-z)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className={`w-3 h-3 rounded-full ${strength.hasUppercase ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+            <span className={`text-xs ${strength.hasUppercase ? 'text-green-600' : 'text-gray-500'}`}>One uppercase letter (A-Z)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className={`w-3 h-3 rounded-full ${strength.hasNumber ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+            <span className={`text-xs ${strength.hasNumber ? 'text-green-600' : 'text-gray-500'}`}>One number (0-9)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className={`w-3 h-3 rounded-full ${strength.hasSpecial ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+            <span className={`text-xs ${strength.hasSpecial ? 'text-green-600' : 'text-gray-500'}`}>One special character (@$!%*?&)</span>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="register_page w-full h-full min-h-screen bg-[#EDEFFD] flex flex-col items-center overflow-x-hidden">
       <LoginNav />
@@ -283,6 +339,7 @@ export default function Register() {
                       placeholder="Set Password (Min Length 6)" 
                     />
                     {showError("password")}
+                    <PasswordStrengthIndicator password={formData.password} />
                   </span>
                   <span className="mb-[10px]">
                     <span className="pb-5 text-[14px] font-medium">Confirm Password</span>
@@ -503,4 +560,3 @@ export default function Register() {
     </div>
   )
 }
-
