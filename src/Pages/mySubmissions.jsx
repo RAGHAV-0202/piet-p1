@@ -47,7 +47,19 @@ const Claim = ({ _id, title, authors, publicationDate, venue, webLink, category,
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
-      await axios.post(`${baseUrl}api/form/claim/${_id}`, {}, { withCredentials: true });
+      const token = localStorage.getItem("accessToken");
+
+      await axios.post(
+        `${baseUrl}api/form/claim/${_id}`,
+        {},
+        {
+          withCredentials: true,
+          headers: token
+            ? { Authorization: `Bearer ${token}` }
+            : {},
+        }
+      );
+
       onDelete(_id);
       setShowConfirm(false);
     } catch (err) {
@@ -57,6 +69,7 @@ const Claim = ({ _id, title, authors, publicationDate, venue, webLink, category,
       setIsDeleting(false);
     }
   };
+
 
   return (
     <div className="w-full bg-white p-5 rounded-xl shadow-md flex flex-col gap-2 border-l-4 border-blue-500 relative">
