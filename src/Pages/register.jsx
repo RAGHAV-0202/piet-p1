@@ -27,7 +27,7 @@ const Progress = (props) => {
         <div className={`flex-shrink-0 flex items-center justify-center w-[30px] h-[30px] rounded-lg ${props.step == 3 ? "bg-blue-600" : "bg-zinc-400"}`}>
           <p className={`text-[16px] ${props.step == 3 ? "text-white" : "text-grey"}`}>3</p>
         </div>
-        <p className="text-[12px] md:text-[14px] font-medium text-center md:text-left whitespace-nowrap">More Details</p>
+        <p className="text-[12px] md:text-[14px] font-medium text-center md:text-left whitespace-nowrap">Research IDs</p>
       </button>
 
       <button onClick={() => { props.setStep(4) }} className="progress_indicator min-w-[80px] md:w-[20%] h-auto md:h-[50px] px-1 flex flex-col md:flex-row items-center justify-start md:justify-between gap-1">
@@ -156,7 +156,7 @@ export default function Register() {
     const fieldsToValidate = {
       1: ["fullName", "email", "password", "confirmPassword"],
       2: ["doj", "department", "designation", "employeeId"],
-      3: ["scopusId", "vidhwanId", "googleScholarId", "orcidId"],
+      3: ["scopusId", "vidhwanId", "googleScholarId", "orcidId"], // All mandatory now
       4: ["bankAccount", "ifsc", "branch"]
     };
     
@@ -427,8 +427,15 @@ export default function Register() {
               )}
               {step == 3 && (
                 <>
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                    <p className="text-sm text-blue-800 font-medium">
+                      ⓘ All research IDs are mandatory for registration
+                    </p>
+                  </div>
                   <span className="mb-[10px]">
-                    <span className="pb-5 text-[14px] font-medium">Scopus ID</span>
+                    <span className="pb-5 text-[14px] font-medium">
+                      Scopus ID <span className="text-red-500">*</span>
+                    </span>
                     <input 
                       name="scopusId" 
                       value={formData.scopusId} 
@@ -437,11 +444,14 @@ export default function Register() {
                       className={getInputClass("scopusId")} 
                       type="text" 
                       placeholder="Scopus Id" 
+                      required
                     />
                     {showError("scopusId")}
                   </span>
                   <span className="mb-[10px]">
-                    <span className="pb-5 text-[14px] font-medium">Vidwan ID</span>
+                    <span className="pb-5 text-[14px] font-medium">
+                      Vidwan ID <span className="text-red-500">*</span>
+                    </span>
                     <input 
                       name="vidhwanId" 
                       value={formData.vidhwanId} 
@@ -450,11 +460,14 @@ export default function Register() {
                       className={getInputClass("vidhwanId")} 
                       type="text" 
                       placeholder="Vidwan ID" 
+                      required
                     />
                     {showError("vidhwanId")}
                   </span>
                   <span className="mb-[10px]">
-                    <span className="pb-5 text-[14px] font-medium">Google Scholar ID</span>
+                    <span className="pb-5 text-[14px] font-medium">
+                      Google Scholar ID <span className="text-red-500">*</span>
+                    </span>
                     <input 
                       name="googleScholarId" 
                       value={formData.googleScholarId} 
@@ -463,11 +476,14 @@ export default function Register() {
                       className={getInputClass("googleScholarId")} 
                       type="text" 
                       placeholder="Google Scholar ID" 
+                      required
                     />
                     {showError("googleScholarId")}
                   </span>
                   <span className="mb-[10px]">
-                    <span className="pb-5 text-[14px] font-medium">ORCID ID</span>
+                    <span className="pb-5 text-[14px] font-medium">
+                      ORCID ID <span className="text-red-500">*</span>
+                    </span>
                     <input 
                       name="orcidId" 
                       value={formData.orcidId} 
@@ -476,6 +492,7 @@ export default function Register() {
                       className={getInputClass("orcidId")} 
                       type="text" 
                       placeholder="ORCID ID" 
+                      required
                     />
                     {showError("orcidId")}
                   </span>
