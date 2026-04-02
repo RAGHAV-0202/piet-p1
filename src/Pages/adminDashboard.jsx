@@ -22,7 +22,7 @@ const AdminWelcome = () => {
   useEffect(() => {
     async function getAdminProfile() {
       try {
-        const token = localStorage.getItem("adminAccessToken");
+        const token = localStorage.getItem("adminToken");
         const response = await axios.get(
           `${baseUrl}api/admin/profile`,
           { 
@@ -70,7 +70,7 @@ const AdminDashboard = () => {
     const fetchSubmissions = async () => {
       setLoading(true);
       try {
-        const token = localStorage.getItem("adminAccessToken");
+        const token = localStorage.getItem("adminToken");
         const response = await axios.get(`${baseUrl}api/admin/claims`, { 
           withCredentials: true,
           headers: token ? { Authorization: `Bearer ${token}` } : {} 
@@ -103,7 +103,7 @@ const AdminDashboard = () => {
     // Fetch user statistics
     const fetchUserStats = async () => {
       try {
-        const token = localStorage.getItem("adminAccessToken");
+        const token = localStorage.getItem("adminToken");
         const response = await axios.get(
             `${baseUrl}api/admin/users`,
             { 

@@ -15,7 +15,7 @@ const AdminNavbar = () => {
     useEffect(() => {
         const getUser = async() => {
             try {
-                const token = localStorage.getItem("adminAccessToken");
+                const token = localStorage.getItem("adminToken");
                 const response = await axios.get(`${baseUrl}api/admin/loggedin`, { 
                     withCredentials: true,
                     headers: token ? { Authorization: `Bearer ${token}` } : {}

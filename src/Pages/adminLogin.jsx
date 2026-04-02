@@ -15,7 +15,7 @@ const LoginNav = () => {
                 const data = await axios.get(`${baseUrl}api/admin/login` , { withCredentials: true } , { withCredentials: true })
                 // console.log(response)
                 const accessToken = data.data.accessToken 
-                localStorage.setItem("adminAccessToken" , accessToken)
+                localStorage.setItem("adminToken" , accessToken)
                 navigate("/admin/dashboard")
             }catch(err){
                 console.log("error while checking if logged in")
@@ -124,7 +124,7 @@ export default function AdminLogin() {
         // Successfully logged in
         const token = response.data.data?.token || response.data.token;
         if (token) {
-          localStorage.setItem("adminAccessToken", token);
+          localStorage.setItem("adminToken", token);
         }
         navigate("/admin/dashboard");
       } else {

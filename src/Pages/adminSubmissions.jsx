@@ -42,7 +42,7 @@ const Claim = ({
   const handleSetProcessed = async () => {
     try {
       setProcessing(true);
-      const token = localStorage.getItem("adminAccessToken");
+      const token = localStorage.getItem("adminToken");
       const response = await axios.post(`${baseUrl}api/admin/update`, {
         _id,
         status: "Processed"
@@ -74,7 +74,7 @@ const Claim = ({
     
     try {
       setDeleting(true);
-      const token = localStorage.getItem("adminAccessToken");
+      const token = localStorage.getItem("adminToken");
       const response = await axios.post(`${baseUrl}api/admin/delete`, {
         _id
       }, { 
@@ -211,7 +211,7 @@ const AdminSubmissions = () => {
   useEffect(() => {
     const fetchSubmissions = async () => {
       try {
-        const token = localStorage.getItem("adminAccessToken");
+        const token = localStorage.getItem("adminToken");
         const response = await axios.get(`${baseUrl}api/admin/claims`, { 
           withCredentials: true,
           headers: token ? { Authorization: `Bearer ${token}` } : {} 

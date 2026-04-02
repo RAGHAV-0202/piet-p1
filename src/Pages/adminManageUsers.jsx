@@ -21,7 +21,7 @@ const SubmissionsModal = ({ isOpen, onClose, userId, userName }) => {
     try {
       setLoading(true);
       // Endpoint to fetch claims for a specific user
-      const token = localStorage.getItem("adminAccessToken");
+      const token = localStorage.getItem("adminToken");
       const response = await axios.get(
         `${baseUrl}api/admin/users/${userId}/claims`, 
         { 
@@ -276,7 +276,7 @@ const Users = () => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("adminAccessToken");
+      const token = localStorage.getItem("adminToken");
       const response = await axios.get(
         `${baseUrl}api/admin/users`,
         { 
@@ -306,7 +306,7 @@ const Users = () => {
   const handleRemoveUser = async (userId) => {
     if (window.confirm("Are you sure you want to remove this user?")) {
       try {
-        const token = localStorage.getItem("adminAccessToken");
+        const token = localStorage.getItem("adminToken");
         await axios.delete(
           `${baseUrl}api/admin/users/${userId}`,
           { 

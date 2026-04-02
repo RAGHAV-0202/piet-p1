@@ -9,12 +9,12 @@ const AdminSideBar = () => {
 
   async function handleLogout() {
     try {
-      const token = localStorage.getItem("adminAccessToken");
+      const token = localStorage.getItem("adminToken");
       await axios.post(`${baseUrl}api/auth/logout`, {}, { 
         withCredentials: true,
         headers: token ? { Authorization: `Bearer ${token}` } : {} 
       });
-      localStorage.removeItem("adminAccessToken");
+      localStorage.removeItem("adminToken");
       navigate("/admin/login");
     } catch (err) {
       console.log("error while logging out");
