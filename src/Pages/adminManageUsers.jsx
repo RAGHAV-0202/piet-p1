@@ -21,9 +21,13 @@ const SubmissionsModal = ({ isOpen, onClose, userId, userName }) => {
     try {
       setLoading(true);
       // Endpoint to fetch claims for a specific user
+      const token = localStorage.getItem("adminAccessToken");
       const response = await axios.get(
         `${baseUrl}api/admin/users/${userId}/claims`, 
-        { withCredentials: true }
+        { 
+          withCredentials: true,
+          headers: token ? { Authorization: `Bearer ${token}` } : {}
+        }
       );
 
       // Access the claims array from the response structure
@@ -272,9 +276,13 @@ const Users = () => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
+      const token = localStorage.getItem("adminAccessToken");
       const response = await axios.get(
         `${baseUrl}api/admin/users`,
-        { withCredentials: true }
+        { 
+          withCredentials: true,
+          headers: token ? { Authorization: `Bearer ${token}` } : {}
+        }
       );
       setUsers(response.data.data || []);
       setLoading(false);
@@ -298,9 +306,13 @@ const Users = () => {
   const handleRemoveUser = async (userId) => {
     if (window.confirm("Are you sure you want to remove this user?")) {
       try {
+        const token = localStorage.getItem("adminAccessToken");
         await axios.delete(
           `${baseUrl}api/admin/users/${userId}`,
-          { withCredentials: true }
+          { 
+            withCredentials: true,
+            headers: token ? { Authorization: `Bearer ${token}` } : {}
+          }
         );
         // Refresh user list after deletion
         fetchUsers();

@@ -42,10 +42,14 @@ const Claim = ({
   const handleSetProcessed = async () => {
     try {
       setProcessing(true);
+      const token = localStorage.getItem("adminAccessToken");
       const response = await axios.post(`${baseUrl}api/admin/update`, {
         _id,
         status: "Processed"
-      }, { withCredentials: true });
+      }, { 
+        withCredentials: true,
+        headers: token ? { Authorization: `Bearer ${token}` } : {} 
+      });
       
       if (response.status === 200) {
         // Call the parent component's callback to update UI
@@ -70,9 +74,13 @@ const Claim = ({
     
     try {
       setDeleting(true);
+      const token = localStorage.getItem("adminAccessToken");
       const response = await axios.post(`${baseUrl}api/admin/delete`, {
         _id
-      }, { withCredentials: true });
+      }, { 
+        withCredentials: true,
+        headers: token ? { Authorization: `Bearer ${token}` } : {} 
+      });
       
       if (response.status === 200) {
         // Call the parent component's callback to update UI
@@ -203,7 +211,11 @@ const AdminSubmissions = () => {
   useEffect(() => {
     const fetchSubmissions = async () => {
       try {
-        const response = await axios.get(`${baseUrl}api/admin/claims`, { withCredentials: true });
+        const token = localStorage.getItem("adminAccessToken");
+        const response = await axios.get(`${baseUrl}api/admin/claims`, { 
+          withCredentials: true,
+          headers: token ? { Authorization: `Bearer ${token}` } : {} 
+        });
 
         if (Array.isArray(response.data.data)) {
           setSubmissions(response.data.data);

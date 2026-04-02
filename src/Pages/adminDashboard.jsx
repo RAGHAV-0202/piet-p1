@@ -22,9 +22,13 @@ const AdminWelcome = () => {
   useEffect(() => {
     async function getAdminProfile() {
       try {
+        const token = localStorage.getItem("adminAccessToken");
         const response = await axios.get(
           `${baseUrl}api/admin/profile`,
-          { withCredentials: true }
+          { 
+            withCredentials: true,
+            headers: token ? { Authorization: `Bearer ${token}` } : {}
+          }
         );
         setData(response.data?.data);
       } catch (err) {
@@ -66,7 +70,11 @@ const AdminDashboard = () => {
     const fetchSubmissions = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${baseUrl}api/admin/claims`, { withCredentials: true });
+        const token = localStorage.getItem("adminAccessToken");
+        const response = await axios.get(`${baseUrl}api/admin/claims`, { 
+          withCredentials: true,
+          headers: token ? { Authorization: `Bearer ${token}` } : {} 
+        });
         
         if (Array.isArray(response.data.data) && response.data.data.length > 0) {
           // Sort submissions by createdAt date (newest first)
@@ -95,9 +103,13 @@ const AdminDashboard = () => {
     // Fetch user statistics
     const fetchUserStats = async () => {
       try {
+        const token = localStorage.getItem("adminAccessToken");
         const response = await axios.get(
             `${baseUrl}api/admin/users`,
-            { withCredentials: true }
+            { 
+              withCredentials: true,
+              headers: token ? { Authorization: `Bearer ${token}` } : {}
+            }
           );
 
           console.log(response.data.data.length)
