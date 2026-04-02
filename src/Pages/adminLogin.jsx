@@ -122,9 +122,9 @@ export default function AdminLogin() {
       
       if (response.data.success) {
         // Successfully logged in
-        const accessToken = response.data.data ? response.data.data.accessToken : response.data.accessToken;
-        if (accessToken) {
-          localStorage.setItem("adminAccessToken" , accessToken);
+        const token = response.data.data?.token || response.data.token;
+        if (token) {
+          localStorage.setItem("adminAccessToken", token);
         }
         navigate("/admin/dashboard");
       } else {
