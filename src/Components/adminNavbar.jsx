@@ -15,7 +15,11 @@ const AdminNavbar = () => {
     useEffect(() => {
         const getUser = async() => {
             try {
-                const response = await axios.get(`${baseUrl}api/admin/loggedin`, { withCredentials: true }, { withCredentials: true });
+                const token = localStorage.getItem("adminAccessToken");
+                const response = await axios.get(`${baseUrl}api/admin/loggedin`, { 
+                    withCredentials: true,
+                    headers: token ? { Authorization: `Bearer ${token}` } : {}
+                });
                 
                 // If the admin API returns user data in the same format, uncomment this
                 // Check the structure of response.data and adjust accordingly
