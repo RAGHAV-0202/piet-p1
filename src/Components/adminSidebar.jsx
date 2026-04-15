@@ -51,10 +51,15 @@ const AdminSideBar = () => {
       text: "All Submissions" 
     },
     { 
-    path: "/admin/users", 
-    icon: "fa-user", 
-    text: "All Users" 
-  }
+      path: "/admin/users", 
+      icon: "fa-user", 
+      text: "All Users" 
+    },
+    { 
+      path: "/admin/backups", 
+      icon: "fa-database", 
+      text: "Database Backups" 
+    }
   ];
 
   // Determine active menu item based on current path
