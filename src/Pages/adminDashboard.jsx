@@ -180,6 +180,33 @@ const AdminDashboard = () => {
     setMonthlySubmissionData(recentMonths);
   };
 
+  const handleBackup = async () => {
+    try {
+      const token = localStorage.getItem("adminToken");
+      const response = await axios.get(`${baseUrl}api/admin/backup`, {
+        withCredentials: true,
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+        responseType: 'blob'
+      });
+
+      // Create a blob link to trigger download
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      const date = new Date().toISOString().split('T')[0];
+      link.setAttribute('download', `piet_backup_${date}.json`);
+      document.body.appendChild(link);
+      link.click();
+      
+      // Clean up
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Error downloading backup:", err);
+      alert("Failed to download backup. Please try again.");
+    }
+  };
+
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
@@ -196,7 +223,7 @@ const AdminDashboard = () => {
           <AdminWelcome />
           
           {/* Quick Action Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <ActionCard 
               icon="fa-folder" 
               title="All Submissions"
@@ -210,6 +237,13 @@ const AdminDashboard = () => {
               description="Manage user accounts and permissions"
               link="/admin/users"
               color="bg-green-100"
+            />
+            <ActionCard 
+              icon="fa-database" 
+              title="Backup Data"
+              description="Download full database snapshot"
+              onClick={handleBackup}
+              color="bg-orange-100"
             />
             {/* <ActionCard 
               icon="fa-gear" 
@@ -374,12 +408,9 @@ const AdminDashboard = () => {
 };
 
 // Helper Components
-const ActionCard = ({ icon, title, description, link, color }) => {
-  return (
-    <a 
-      href={link}
-      className={`${color} rounded-lg overflow-hidden shadow-sm h-48 flex flex-col transition-all duration-200 hover:shadow-md hover:scale-[1.02]`}
-    >
+const ActionCard = ({ icon, title, description, link, onClick, color }) => {
+  const CardContent = () => (
+    <>
       <div className="flex-1 flex items-center justify-center">
         <div className="w-16 h-16 flex items-center justify-center">
           <i className={`fa-solid ${icon} text-4xl text-gray-700`}></i>
@@ -389,6 +420,22 @@ const ActionCard = ({ icon, title, description, link, color }) => {
         <h3 className="font-medium text-gray-800">{title}</h3>
         <p className="text-xs text-gray-500 mt-1">{description}</p>
       </div>
+    </>
+  );
+
+  const baseClasses = `${color} rounded-lg overflow-hidden shadow-sm h-48 flex flex-col transition-all duration-200 hover:shadow-md hover:scale-[1.02] cursor-pointer w-full text-left`;
+
+  if (onClick) {
+    return (
+      <button onClick={onClick} className={baseClasses}>
+        <CardContent />
+      </button>
+    );
+  }
+
+  return (
+    <a href={link} className={baseClasses}>
+      <CardContent />
     </a>
   );
 };
