@@ -359,11 +359,11 @@ const AdminSubmissions = () => {
   };
 
   return (
-    <div className="h-auto min-h-[100vh] w-full flex flex-row pr-5">
+    <div className="h-auto min-h-[100vh] w-full flex flex-row pr-2 md:pr-5">
       <AdminSideBar />
       <div className="content w-full h-full flex flex-col">
         {/* <AdminNavbar /> */}
-        <div className="areaContent bg-[#EDEFFD] flex w-full py-10 px-10 min-h-[calc(100vh)] h-auto rounded-2xl  shadow-lg flex-col">
+        <div className="areaContent bg-[#EDEFFD] flex w-full py-6 md:py-10 px-3 md:px-10 min-h-[calc(100vh)] h-auto rounded-2xl shadow-lg flex-col">
           <h2 className="font-bold text-2xl mb-4">Admin Panel - All Submissions</h2>
 
           <div className="w-full h-auto py-4 bg-white mb-3 flex flex-row items-center px-[20px] rounded-xl gap-[20px] flex-wrap">

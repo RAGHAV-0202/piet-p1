@@ -219,4 +219,137 @@
         justify-content: left;
     }
 
+    /* ===== Dashboard Mobile Fixes ===== */
+    
+    /* Stack action cards vertically */
+    .grid.grid-cols-1.md\\:grid-cols-3 {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+
+    /* Make dashboard grid single column */
+    .grid.grid-cols-1.lg\\:grid-cols-3 {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Reduce padding on mobile */
+    .p-6 {
+        padding: 12px !important;
+    }
+
+    /* Action cards - reduce height on mobile */
+    .grid a[class*="h-48"] {
+        height: auto !important;
+        min-height: 100px;
+    }
+
+    /* ===== Claim Form Mobile Fixes ===== */
+    
+    /* Full-width file upload grid */
+    .grid.md\\:grid-cols-2 {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Claim form container - reduce padding */
+    .max-w-4xl {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+
+    .px-8 {
+        padding-left: 16px !important;
+        padding-right: 16px !important;
+    }
+
+    /* ===== My Submissions Mobile Fixes ===== */
+    
+    /* Submissions area - reduce padding */
+    .areaContent {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+
+    /* Claim card buttons - stack on very small screens */
+    .flex.flex-wrap.items-center.gap-3 button {
+        flex: 1;
+        min-width: 130px;
+    }
+
+    /* ===== Admin Table Mobile Fixes ===== */
+    
+    /* Make tables scrollable horizontally */
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    thead, tbody, tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    /* Department leaderboard - allow scroll */
+    .overflow-x-auto {
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* ===== Profile Page Mobile ===== */
+    
+    /* Ensure profile content doesn't overflow */
+    .content {
+        overflow-x: hidden;
+    }
+
+    /* ===== Notification Dropdown Mobile ===== */
+    
+    /* Wider notification dropdown on mobile */
+    #notification-bell + div,
+    [class*="w-80"] {
+        width: calc(100vw - 32px) !important;
+        max-width: 350px;
+        right: -8px;
+    }
+
+    /* ===== General Mobile Fixes ===== */
+    
+    /* Prevent horizontal overflow */
+    body, html {
+        overflow-x: hidden;
+    }
+
+    /* Welcome text smaller on mobile */
+    .text-2xl {
+        font-size: 1.25rem !important;
+    }
+
+    /* Chart container height on mobile */
+    .h-48 {
+        height: 160px !important;
+    }
+}
+
+/* Extra small screens (< 375px) */
+@media screen and (max-width: 375px) {
+    .px-8 {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+
+    .py-8 {
+        padding-top: 16px !important;
+        padding-bottom: 16px !important;
+    }
+
+    /* Stack claim buttons vertically */
+    .flex.flex-wrap.items-center.gap-3 {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .flex.flex-wrap.items-center.gap-3 button {
+        width: 100%;
+    }
 }

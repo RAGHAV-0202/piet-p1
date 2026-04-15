@@ -63,6 +63,7 @@ const AdminDashboard = () => {
   const [recentSubmissions, setRecentSubmissions] = useState([]);
   const [monthlySubmissionData, setMonthlySubmissionData] = useState([]);
   const [userStats, setUserStats] = useState({ total: 0, active: 0 });
+  const [departmentStats, setDepartmentStats] = useState([]);
   const [loading, setLoading] = useState(true);
   
   // Fetch submissions data
@@ -120,8 +121,29 @@ const AdminDashboard = () => {
       }
     };
 
+    // Fetch department-wise stats
+    const fetchDepartmentStats = async () => {
+      try {
+        const token = localStorage.getItem("adminToken");
+        const response = await axios.get(
+          `${baseUrl}api/admin/departmentStats`,
+          {
+            withCredentials: true,
+            headers: token ? { Authorization: `Bearer ${token}` } : {}
+          }
+        );
+        if (Array.isArray(response.data.data)) {
+          setDepartmentStats(response.data.data);
+        }
+      } catch (err) {
+        console.error("Error fetching department stats:", err);
+        setDepartmentStats([]);
+      }
+    };
+
     fetchSubmissions();
     fetchUserStats();
+    fetchDepartmentStats();
   }, []);
 
   // Process submissions data for the chart based on createdAt field
@@ -294,6 +316,56 @@ const AdminDashboard = () => {
                 )}
               </div>
             </div>
+          </div>
+
+          {/* Department-wise Leaderboard */}
+          <div className="bg-white rounded-lg shadow p-6 mt-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-medium">Department Research Output</h2>
+              <span className="text-xs text-gray-400">Sorted by total claims</span>
+            </div>
+            
+            {loading ? (
+              <div className="space-y-3">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="h-10 bg-gray-100 animate-pulse rounded"></div>
+                ))}
+              </div>
+            ) : departmentStats.length > 0 ? (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-gray-200">
+                      <th className="text-left py-3 px-4 font-semibold text-gray-600">#</th>
+                      <th className="text-left py-3 px-4 font-semibold text-gray-600">Department</th>
+                      <th className="text-center py-3 px-4 font-semibold text-gray-600">Total Claims</th>
+                      <th className="text-center py-3 px-4 font-semibold text-gray-600">Total Amount</th>
+                      <th className="text-center py-3 px-4 font-semibold text-gray-600">Faculty</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {departmentStats.map((dept, index) => (
+                      <tr key={dept.department} className={`border-b border-gray-100 hover:bg-gray-50 transition-colors ${index < 3 ? 'bg-gradient-to-r from-transparent' : ''}`}>
+                        <td className="py-3 px-4">
+                          {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : <span className="text-gray-400">{index + 1}</span>}
+                        </td>
+                        <td className="py-3 px-4 font-medium text-gray-800">{dept.department}</td>
+                        <td className="py-3 px-4 text-center">
+                          <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded-full text-xs font-medium">{dept.totalClaims}</span>
+                        </td>
+                        <td className="py-3 px-4 text-center font-medium text-green-600">₹{dept.totalAmount.toLocaleString()}</td>
+                        <td className="py-3 px-4 text-center text-gray-600">{dept.facultyCount}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-8 text-center">
+                <i className="fa-solid fa-building-columns text-gray-300 text-2xl mb-2"></i>
+                <p className="text-gray-500">No department data available</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

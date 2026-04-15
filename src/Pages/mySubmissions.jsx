@@ -3,6 +3,7 @@ import axios from "axios";
 import Navbar from "../Components/navbar.jsx";
 import SideBar from "../Components/sidebar.jsx";
 import baseUrl from "../baseurl.js";
+import { generateClaimPDF } from "../utils/pdfGenerator.js";
 
 const UserWelcome = ({ name, isLoading }) => {
   if (isLoading) {
@@ -119,7 +120,13 @@ const Claim = ({ _id, title, authors, publicationDate, venue, webLink, category,
         </div>
       }
 
-      <div className="mt-4 pt-4 border-t border-gray-200">
+      <div className="mt-4 pt-4 border-t border-gray-200 flex flex-wrap items-center gap-3">
+        <button
+          onClick={() => generateClaimPDF({ _id, title, authors, publicationDate, venue, webLink, category, calculatedAmount, claimProof, paperFront, createdAt })}
+          className="px-4 py-2 rounded-md text-sm transition bg-blue-500 text-white hover:bg-blue-600"
+        >
+          📥 Download PDF
+        </button>
         <button
           onClick={() => setShowConfirm(true)}
           disabled={!isDeletable}
@@ -132,12 +139,12 @@ const Claim = ({ _id, title, authors, publicationDate, venue, webLink, category,
           🗑️ Delete Submission
         </button>
         {!isDeletable && (
-          <p className="text-xs text-gray-500 mt-2">
+          <p className="text-xs text-gray-500 mt-2 w-full">
             Deletion period expired (only allowed within 7 days of submission)
           </p>
         )}
         {isDeletable && daysLeft() > 0 && (
-          <p className="text-xs text-gray-500 mt-2">
+          <p className="text-xs text-gray-500 mt-2 w-full">
             Can be deleted for {daysLeft()} more day{daysLeft() !== 1 ? 's' : ''}
           </p>
         )}

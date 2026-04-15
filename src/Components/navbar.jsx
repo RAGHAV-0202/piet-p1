@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import baseUrl from "../baseurl.js";
 import { useNavigate } from "react-router-dom";
+import NotificationBell from "./NotificationBell.jsx";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -87,8 +88,10 @@ const Navbar = () => {
       {/* Spacer for desktop */}
       <div className="hidden md:block"></div>
       
-      {/* Right side - User Profile */}
-      <div className="profile-dropdown relative">
+      {/* Right side - Notifications + User Profile */}
+      <div className="flex items-center space-x-2 md:space-x-4">
+        <NotificationBell />
+        <div className="profile-dropdown relative">
         <button 
           className="flex items-center space-x-3 focus:outline-none"
           onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -133,6 +136,7 @@ const Navbar = () => {
             </button>
           </div>
         )}
+      </div>
       </div>
     </header>
   );
