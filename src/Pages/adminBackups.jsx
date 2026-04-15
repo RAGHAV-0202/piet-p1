@@ -9,6 +9,9 @@ const AdminBackups = () => {
     const [serverBackups, setServerBackups] = useState([]);
     const [loading, setLoading] = useState(true);
     const [actionLoading, setActionLoading] = useState(false);
+    const [showEmergency, setShowEmergency] = useState(false);
+    const [pin, setPin] = useState("");
+    const [isEmergencyLoading, setIsEmergencyLoading] = useState(false);
 
     const fetchServerBackups = async () => {
         setLoading(true);
@@ -21,6 +24,10 @@ const AdminBackups = () => {
             setServerBackups(response.data.data);
         } catch (err) {
             console.error("Error fetching server backups:", err);
+            // If unauthorized or DB is down, show emergency login
+            if (err.response?.status === 401 || err.response?.status === 403 || err.response?.status === 503) {
+                setShowEmergency(true);
+            }
         } finally {
             setLoading(false);
         }
@@ -29,6 +36,23 @@ const AdminBackups = () => {
     useEffect(() => {
         fetchServerBackups();
     }, []);
+
+    const handleEmergencyLogin = async (e) => {
+        e.preventDefault();
+        setIsEmergencyLoading(true);
+        try {
+            const response = await axios.post(`${baseUrl}api/admin/emergency-login`, { pin });
+            const token = response.data.data.token;
+            localStorage.setItem("adminToken", token);
+            setShowEmergency(false);
+            setPin("");
+            fetchServerBackups();
+        } catch (err) {
+            alert(err.response?.data?.message || "Invalid Emergency PIN");
+        } finally {
+            setIsEmergencyLoading(false);
+        }
+    };
 
     const handleCreateSnapshot = async () => {
         setActionLoading(true);
@@ -211,8 +235,59 @@ const AdminBackups = () => {
                             </div>
                         )}
                     </div>
-                </div>
             </div>
+
+            {/* Emergency PIN Overlay */}
+            {showEmergency && (
+                <div className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-md z-50 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in duration-300">
+                        <div className="bg-orange-500 p-6 text-white text-center">
+                            <div className="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i className="fa-solid fa-shield-halved text-3xl"></i>
+                            </div>
+                            <h2 className="text-xl font-bold">Two-Factor Authentication</h2>
+                            <p className="text-orange-100 text-sm mt-2">
+                                Emergency Recovery Mode
+                            </p>
+                        </div>
+                        <form onSubmit={handleEmergencyLogin} className="p-8">
+                            <p className="text-gray-600 text-sm mb-6 text-center">
+                                Database is unreachable. Enter the 6-digit code from your <strong>Google Authenticator</strong> app to unlock server snapshots.
+                            </p>
+                            <div className="mb-6">
+                                <input 
+                                    type="text"
+                                    maxLength="6"
+                                    value={pin}
+                                    onChange={(e) => setPin(e.target.value)}
+                                    placeholder="000000"
+                                    className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent text-center text-4xl tracking-[0.2em] font-mono outline-none transition-all"
+                                    required
+                                    autoFocus
+                                />
+                            </div>
+                            <button 
+                                type="submit"
+                                disabled={isEmergencyLoading}
+                                className="w-full py-4 bg-gray-900 text-white rounded-xl font-bold hover:bg-gray-800 transition-all flex items-center justify-center disabled:opacity-50"
+                            >
+                                {isEmergencyLoading ? (
+                                    <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                ) : (
+                                    "Unlock Backups"
+                                )}
+                            </button>
+                            <button 
+                                type="button"
+                                onClick={() => window.location.href = "/admin/login"}
+                                className="w-full mt-4 text-gray-500 text-sm hover:underline"
+                            >
+                                Return to Standard Login
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
