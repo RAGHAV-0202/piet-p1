@@ -235,6 +235,7 @@ const AdminBackups = () => {
                             </div>
                         )}
                     </div>
+                </div>
             </div>
 
             {/* Emergency PIN Overlay */}
