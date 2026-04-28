@@ -271,7 +271,7 @@ const handleNumberAuthors = (e) => {
     } else if (isProfessionalBody) {
       // Professional body remains the same
       formData.append("title", "Professional Body Membership");
-      formData.append("numberOfAuthors (From PIET)", 1);
+      formData.append("numberOfAuthors", 1);
       formData.append("authors[0]", "NA");
       formData.append("authorAffiliation[0]", "NA");
       formData.append("calculatedAmount", incentive);
@@ -380,7 +380,7 @@ const handleNumberAuthors = (e) => {
                 <div className="space-y-3">
                   <label className="flex items-center text-sm font-semibold text-gray-700">
                     <span className="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
-                    Number of Authors
+                    Number of Authors (From PIET)
                     <span className="text-red-500 ml-1">*</span>
                   </label>
                   <select
