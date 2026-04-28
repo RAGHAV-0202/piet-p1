@@ -271,7 +271,7 @@ const handleNumberAuthors = (e) => {
     } else if (isProfessionalBody) {
       // Professional body remains the same
       formData.append("title", "Professional Body Membership");
-      formData.append("numberOfAuthors", 1);
+      formData.append("numberOfAuthors (From PIET)", 1);
       formData.append("authors[0]", "NA");
       formData.append("authorAffiliation[0]", "NA");
       formData.append("calculatedAmount", incentive);
